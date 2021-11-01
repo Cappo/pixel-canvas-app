@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-import { error, redis, log } from '../utils/debug'
+import { error, redis } from '../utils/debug'
 
 export let client
 
@@ -7,14 +7,14 @@ const initRedis = async () => {
   const redisPort = 6379
   client = createClient(redisPort)
 
-  client.on('error', (err) => error('Redis Client Error', err));
+  client.on('error', (err) => error('Redis Client Error', err))
   redis('Redis connected!')
 
   await client.connect()
   // const colors = ['blue', 'red', 'green']
   // const multi = client.multi()
   // for (let i = 0; i < 100;  i++) {
-    // multi.rPush('pixels', '#ffffff')
+  // multi.rPush('pixels', '#ffffff')
   // }
   // const msg = await multi.exec()
   // const lset = await client.lSet('pixels', 10, '#eeeeee')
@@ -35,7 +35,6 @@ const initRedis = async () => {
   // }
   // const len = await client.lLen('pixels')
   // redis('length', len)
-  
 
   return client
 }

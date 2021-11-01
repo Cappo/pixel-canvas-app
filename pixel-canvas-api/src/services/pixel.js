@@ -2,8 +2,7 @@ import pixels from '../models/pixel'
 import HttpStatus from 'http-status-codes'
 import handleErrors from '../utils/handleErrors'
 import BadRequestError from '../utils/BadRequestError'
-import { log, error } from '../utils/debug'
-import { client } from '../redis/init'
+import { error } from '../utils/debug'
 
 export const getAllPixels = async (req, res) => {
   try {
@@ -12,11 +11,16 @@ export const getAllPixels = async (req, res) => {
     const page = Number.parseInt(req.query.page)
     const limit = Number.parseInt(req.query.limit)
     if (page !== undefined && limit !== undefined) {
-      docs = await pixels.find({}, { color: 1, _id: 0 }).sort({index: 'asc'}).skip(page * limit).limit(limit).exec()
+      docs = await pixels
+        .find({}, { color: 1, _id: 0 })
+        .sort({ index: 'asc' })
+        .skip(page * limit)
+        .limit(limit)
+        .exec()
     } else {
-      docs = await pixels.find({}, { color: 1, _id: 0 }).sort({index: 'asc'})
+      docs = await pixels.find({}, { color: 1, _id: 0 }).sort({ index: 'asc' })
     }
-    docs = docs.map(p => p.color)
+    docs = docs.map((p) => p.color)
     res.status(HttpStatus.OK).send(docs)
   } catch (err) {
     handleErrors(err, res)
