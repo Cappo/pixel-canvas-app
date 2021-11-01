@@ -1,0 +1,7 @@
+.user-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+.user-list > li::before {
+  content: attr(data-content)
+}

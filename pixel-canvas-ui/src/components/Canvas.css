@@ -1,0 +1,11 @@
+#canvas {
+  image-rendering: pixelated;
+  /* cursor: crosshair; */
+}
+
+.painting {
+  cursor: crosshair;
+}
+.grabbing {
+  cursor: grabbing;
+}

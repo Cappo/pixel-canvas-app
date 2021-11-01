@@ -1,0 +1,16 @@
+# npm
+node_modules/
+
+# IDE
+.vscode/
+
+# OS
+DS_Store
+
+# secrets
+.env
+
+# build
+bin/
+dist/
+build/

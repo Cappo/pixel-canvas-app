@@ -1,0 +1,33 @@
+version: '2'
+services:
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - ./db-cache:/data/db
+  api:
+    image: pixel_api:local
+    build: ./pixel-canvas-api
+    restart: always
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - 4000:4000
+    environment:
+      DB_USER: root
+      DB_PASSWORD: example
+      DB_ADDR: db
+  ui:
+    image: pixel_ui:local
+    build: ./pixel-canvas-ui
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - 3000:80

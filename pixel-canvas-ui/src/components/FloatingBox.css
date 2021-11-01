@@ -1,0 +1,8 @@
+.floating-box {
+  position: fixed;
+  z-index: 10;
+  background-color: white;
+  padding: 10px;
+  box-shadow: grey 0px 0px 10px;
+  border-radius: 5px;
+}

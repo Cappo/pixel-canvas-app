@@ -1,0 +1,14 @@
+.toolbox {
+  display: flex;
+  justify-content: space-between;
+  width: 120px;
+}
+
+.toolbox > * {
+  height: 30px;
+}
+
+.toolbox > button {
+  font-size: large;
+  width: 30px;
+}
