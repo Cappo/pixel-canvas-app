@@ -14,6 +14,6 @@
   "extends": ["eslint:recommended", "plugin:prettier/recommended", "plugin:jest/recommended"],
   "ignorePatterns": ["bin/", "node_modules/", "insomnia/"],
   "rules": {
-    "jest/no-test-callback": 0,
+    "jest/no-test-callback": 0
   }
 }

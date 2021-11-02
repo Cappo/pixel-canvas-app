@@ -132,6 +132,8 @@ const ToolBox = ({ canvasRef }) => {
     [ref, translate]
   )
 
+  // TODO: use keyboard for movement
+
   useEffect(() => {
     if (ref && ref.current) {
       const canvas = ref.current

@@ -11,11 +11,12 @@ const changeQueue = []
 const Canvas2 = ({ pixels, socket }) => {
   const ref = useRef(null)
   const [state, setState] = useState('painting')
-  const [queueStart, setQueueStart] = useState(false)
+  const [queueStart, setQueueStart] = useState(true)
 
   const color = useSelector(store => store.color)
 
-  const dimensions = Math.sqrt(pixels.length)
+  // const dimensions = Math.sqrt(pixels.length)
+  const dimensions = 1000
 
   // converts index to x/y and color array to hex value then paints
   const paint = useCallback(({ index, color}) => {
@@ -29,20 +30,28 @@ const Canvas2 = ({ pixels, socket }) => {
   }, [dimensions])
 
   useEffect(() => {
-    if (ref && ref.current && pixels.length) {
-      const canvas = ref.current
-      const ctx = canvas.getContext('2d')
-      ctx.imageSmoothingEnabled = false
-      ctx.imageSmoothingQuality = 'high'
-      const data2 = new Uint8ClampedArray(pixels.length * 4)
-      pixels.forEach((pixel, i) => {
-        for (let j = 0; j < pixel.length; j++) {
-          data2[(i * 4) + j] = pixel[j]
-        }
+    if (ref && ref.current) {
+      socket.emit('init', ({ buffer }) => {
+        const canvas = ref.current
+        const ctx = canvas.getContext('2d')
+        const data = new Uint8ClampedArray(buffer)
+        const imageData = new ImageData(data, dimensions)
+        ctx.putImageData(imageData, 0, 0)
+        setQueueStart(true)
       })
-      const imageData = new ImageData(data2, dimensions)
-      ctx.putImageData(imageData, 0, 0)
-      setQueueStart(true)
+      // const canvas = ref.current
+      // const ctx = canvas.getContext('2d')
+      // ctx.imageSmoothingEnabled = false
+      // ctx.imageSmoothingQuality = 'high'
+      // const data2 = new Uint8ClampedArray(pixels.length * 4)
+      // pixels.forEach((pixel, i) => {
+      //   for (let j = 0; j < pixel.length; j++) {
+      //     data2[(i * 4) + j] = pixel[j]
+      //   }
+      // })
+      // const imageData = new ImageData(data2, dimensions)
+      // ctx.putImageData(imageData, 0, 0)
+      // setQueueStart(true)
     }
   }, [dimensions, pixels])
 
@@ -98,7 +107,9 @@ const Canvas2 = ({ pixels, socket }) => {
     }
 
   // click to drag style setter
-  const middleMousePressCheck = ({ button }) => {
+  const middleMousePressCheck = (e) => {
+    const { button } = e
+    console.log(e)
     if (button === 1) {
       setState('grabbing')
     }
@@ -113,7 +124,7 @@ const Canvas2 = ({ pixels, socket }) => {
 
   return (
     <>
-      {pixels.length === 0 ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null}
+      {/* {pixels.length === 0 ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null} */}
       <canvas
         id="canvas"
         width={dimensions}

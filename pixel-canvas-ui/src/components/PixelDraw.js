@@ -58,7 +58,7 @@ const PixelDraw = () => {
       setPixels(pixelsCache)
     }
 
-    method === 'ALL' ? fetchAll() : fetchByPage()
+    // method === 'ALL' ? fetchAll() : fetchByPage()
   }, [])
 
   useEffect(() => {

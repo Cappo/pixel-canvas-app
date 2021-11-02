@@ -5,7 +5,7 @@ import helmet from 'helmet'
 import cors from 'cors'
 import { error } from './utils/debug'
 import db from './db'
-// import redis from './redis/init'
+import redis from './redis/init'
 import pixelRoutes from './routes/pixel'
 import HttpStatus from 'http-status-codes'
 
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'test') {
   const pixelSeed =
     process.env.PIXEL_SEED === undefined ? undefined : process.env.PIXEL_SEED
   db({ pixelSeed })
-  // redis()
+  redis({ pixelSeed })
 }
 const app = express()
 

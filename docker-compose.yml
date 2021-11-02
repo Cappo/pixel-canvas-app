@@ -1,6 +1,18 @@
 version: '2'
 services:
+  redis:
+    profiles:
+      - backend
+      - all
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis-cache:/data
   db:
+    profiles:
+      - backend
+      - all
     image: mongo
     ports:
       - 27017:27017
@@ -10,20 +22,29 @@ services:
     volumes:
       - ./db-cache:/data/db
   api:
+    profiles:
+      - backend
+      - all
     image: pixel_api:local
     build: ./pixel-canvas-api
     restart: always
     depends_on:
       - db
+      - redis
     links:
       - db
+      - redis
     ports:
       - 4000:4000
     environment:
       DB_USER: root
       DB_PASSWORD: example
       DB_ADDR: db
+      REDIS_ADDR: redis
   ui:
+    profiles:
+      - frontend
+      - all
     image: pixel_ui:local
     build: ./pixel-canvas-ui
     restart: always
