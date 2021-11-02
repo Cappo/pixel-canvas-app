@@ -71,8 +71,3 @@ export const randomNameObj = {
   number: String(randomNumber).padStart(3, '0'),
 }
 export const randomName = Object.values(randomNameObj).join('-')
-
-
-export const hexToArray = hexString => Uint8ClampedArray.from(Buffer.from((hexString).slice(1), 'hex'))
-
-export const hexToString = hex => '#' + Buffer.from(hex).toString('hex')

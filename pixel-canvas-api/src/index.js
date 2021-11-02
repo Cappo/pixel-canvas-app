@@ -6,6 +6,7 @@ import cors from 'cors'
 import { error } from './utils/debug'
 import db from './db'
 import redis from './redis/init'
+import redisRoutes from './routes/redis'
 import pixelRoutes from './routes/pixel'
 import HttpStatus from 'http-status-codes'
 
@@ -42,5 +43,6 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/pixels', pixelRoutes)
+app.use('/redis', redisRoutes)
 
 export default app

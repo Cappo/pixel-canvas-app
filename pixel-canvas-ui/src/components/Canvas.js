@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { MIN_ZOOM } from '../config'
-import { hexToArray, hexToString } from '../utils'
 import ToolBox from './ToolBox'
 import FloatingBox from './FloatingBox'
 import './Canvas.css'
 
 const changeQueue = []
 
-const Canvas2 = ({ pixels, socket }) => {
+const Canvas2 = ({ socket }) => {
   const ref = useRef(null)
   const [state, setState] = useState('painting')
-  const [queueStart, setQueueStart] = useState(true)
+  const [queueStart, setQueueStart] = useState(false)
 
   const color = useSelector(store => store.color)
 
@@ -24,8 +23,7 @@ const Canvas2 = ({ pixels, socket }) => {
     const ctx = canvas.getContext('2d')
     const x = index % dimensions
     const y = Math.floor(index / dimensions)
-    const fillColor = hexToString(color)
-    ctx.fillStyle = fillColor
+    ctx.fillStyle = color
     ctx.fillRect(x, y, 1, 1)
   }, [dimensions])
 
@@ -39,21 +37,8 @@ const Canvas2 = ({ pixels, socket }) => {
         ctx.putImageData(imageData, 0, 0)
         setQueueStart(true)
       })
-      // const canvas = ref.current
-      // const ctx = canvas.getContext('2d')
-      // ctx.imageSmoothingEnabled = false
-      // ctx.imageSmoothingQuality = 'high'
-      // const data2 = new Uint8ClampedArray(pixels.length * 4)
-      // pixels.forEach((pixel, i) => {
-      //   for (let j = 0; j < pixel.length; j++) {
-      //     data2[(i * 4) + j] = pixel[j]
-      //   }
-      // })
-      // const imageData = new ImageData(data2, dimensions)
-      // ctx.putImageData(imageData, 0, 0)
-      // setQueueStart(true)
     }
-  }, [dimensions, pixels])
+  }, [dimensions, socket])
 
   // listen for change messages
   useEffect(() => {
@@ -95,10 +80,7 @@ const Canvas2 = ({ pixels, socket }) => {
       const imageX = Math.floor((pageX - rect.left.toFixed(1)) / scale.toFixed(1))
       const imageY = Math.floor((pageY - rect.top.toFixed(1)) / scale.toFixed(1))
       const index = imageX + (dimensions * imageY)
-      const colorArray = [0, 0, 0, 255]
-      hexToArray(color).forEach((c, i) => colorArray[i] = parseInt(Number(c)))
-      console.log(colorArray)
-      socket.emit('change', { index, color: colorArray }, ({ status }) => {
+      socket.emit('change', { index, color }, ({ status }) => {
         if (status === 'ok') {
           ctx.fillStyle = color
           ctx.fillRect(imageX,imageY, 1, 1)
@@ -124,7 +106,7 @@ const Canvas2 = ({ pixels, socket }) => {
 
   return (
     <>
-      {/* {pixels.length === 0 ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null} */}
+      {queueStart === false ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null}
       <canvas
         id="canvas"
         width={dimensions}

@@ -8,8 +8,10 @@ build-docker:
 	docker-compose --profile all build
 build: build-packages build-docker
 start:
-	docker-compose up
+	docker-compose --profile all up
 start-backend:
 	docker-compose --profile backend up
 down:
 	docker-compose down
+clean:
+	rm -rf db-cache redis-cache

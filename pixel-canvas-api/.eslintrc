@@ -3,7 +3,8 @@
   "env": {
       "node": true,
       "commonjs": true,
-      "jest/globals": true
+      "jest/globals": true,
+      "es6": true
   },
   "parserOptions": {
     "ecmaVersion": 2019,
