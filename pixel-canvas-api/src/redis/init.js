@@ -15,6 +15,8 @@ const initRedis = async ({ pixelSeed }) => {
   console.log(array)
   console.log(buffer)
 
+  // TODO: init from DB
+
   try {
     await client.set('pixels', buffer)
   } catch (e) {
