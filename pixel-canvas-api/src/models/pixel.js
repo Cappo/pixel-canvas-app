@@ -2,7 +2,11 @@ import mongoose from 'mongoose'
 
 const pixelSchema = new mongoose.Schema(
   {
-    color: { type: [mongoose.Schema.Types.Number], required: true },
+    color: {
+      type: [mongoose.Schema.Types.Number],
+      required: true,
+      default: [255, 255, 255],
+    },
     index: {
       type: mongoose.Schema.Types.Number,
       required: true,

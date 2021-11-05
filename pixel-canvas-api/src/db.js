@@ -35,11 +35,9 @@ const initDB = async ({ pixelSeed } = {}) => {
         let additional = pixelSeed - count
         if (additional > pageSize) additional = pageSize
         // init pixel canvas
-        const pixelArray = []
+        const pixelArray = new Array(additional)
         for (let i = 0; i < additional; i++) {
-          // const color = new Uint8ClampedArray.from([255, 255, 255, 255])
-          const color = [255, 255, 255]
-          pixelArray.push({ color: color, index: page * pageSize + i })
+          pixelArray[i] = { index: page * pageSize + i }
         }
         try {
           await pixels.insertMany(pixelArray, {
