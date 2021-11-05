@@ -28,3 +28,4 @@ To get the Node server running locally:
 - `services/` - This folder contains the business logic for our endpoints.
 - `models/` - This folder contains the schema definitions for our Mongoose models.
 - `sockets/` - This folder contains socket management and message handlers.
+- `redis/` - This folder contains redis management functions.
