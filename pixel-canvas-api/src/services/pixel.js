@@ -6,7 +6,10 @@ import { error } from '../utils/debug'
 
 export const getAllPixels = async (req, res) => {
   try {
-    docs = await pixels.find({}, { color: 1, _id: 0 }).sort({ index: 'asc' }).lean()
+    let docs = await pixels
+      .find({}, { color: 1, _id: 0 })
+      .sort({ index: 'asc' })
+      .lean()
     docs = docs.map((p) => p.color)
     res.status(HttpStatus.OK).send(docs)
   } catch (err) {
@@ -15,7 +18,7 @@ export const getAllPixels = async (req, res) => {
 }
 
 export const getPixelCount = async (req, res) => {
-  const len = await pixels.countDocuments({})
+  const len = await pixels.estimatedDocumentCount()
   res.status(HttpStatus.OK).send({ length: len })
 }
 

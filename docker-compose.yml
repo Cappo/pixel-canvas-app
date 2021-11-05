@@ -3,6 +3,7 @@ services:
   redis:
     profiles:
       - backend
+      - data
       - all
     image: redis
     ports:
@@ -12,6 +13,7 @@ services:
   db:
     profiles:
       - backend
+      - data
       - all
     image: mongo
     ports:

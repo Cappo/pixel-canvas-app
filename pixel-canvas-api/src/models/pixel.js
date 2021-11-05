@@ -13,10 +13,9 @@ const pixelSchema = new mongoose.Schema(
   {
     strict: true,
     versionKey: false,
+    autoIndex: false,
   }
 )
-
-pixelSchema.index({ index: 1 })
 
 const model = mongoose.model('pixel', pixelSchema)
 

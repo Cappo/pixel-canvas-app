@@ -4,8 +4,8 @@ import compression from 'compression'
 import helmet from 'helmet'
 import cors from 'cors'
 import { error } from './utils/debug'
-import db from './db'
-import redis from './redis/init'
+import initDB from './db'
+import initRedis from './redis/init'
 import redisRoutes from './routes/redis'
 import pixelRoutes from './routes/pixel'
 import HttpStatus from 'http-status-codes'
@@ -27,8 +27,8 @@ if (process.env.NODE_ENV !== 'test') {
 if (process.env.NODE_ENV !== 'test') {
   const pixelSeed =
     process.env.PIXEL_SEED === undefined ? undefined : process.env.PIXEL_SEED
-  db({ pixelSeed })
-  redis({ pixelSeed })
+  initRedis()
+  initDB({ pixelSeed })
 }
 const app = express()
 

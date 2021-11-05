@@ -11,6 +11,8 @@ start:
 	docker-compose --profile all up
 start-backend:
 	docker-compose --profile backend up
+start-data:
+	docker-compose --profile data up
 down:
 	docker-compose down
 clean:
