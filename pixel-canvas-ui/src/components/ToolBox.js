@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { changeColor } from '../reducer'
 import { MAX_ZOOM, MIN_ZOOM } from '../config'
@@ -15,6 +15,7 @@ let translations = {
   translateX: 0,
   translateY: 0,
 }
+
 // ToolBox for adjusting zoom, panning, and selecting color
 const ToolBox = ({ canvasRef }) => {
   const ref = canvasRef

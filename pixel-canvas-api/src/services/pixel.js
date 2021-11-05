@@ -6,20 +6,7 @@ import { error } from '../utils/debug'
 
 export const getAllPixels = async (req, res) => {
   try {
-    // const { page, limit } = req.query
-    let docs
-    const page = Number.parseInt(req.query.page)
-    const limit = Number.parseInt(req.query.limit)
-    if (page !== undefined && limit !== undefined) {
-      docs = await pixels
-        .find({}, { color: 1, _id: 0 })
-        .sort({ index: 'asc' })
-        .skip(page * limit)
-        .limit(limit)
-        .exec()
-    } else {
-      docs = await pixels.find({}, { color: 1, _id: 0 }).sort({ index: 'asc' })
-    }
+    docs = await pixels.find({}, { color: 1, _id: 0 }).sort({ index: 'asc' }).lean()
     docs = docs.map((p) => p.color)
     res.status(HttpStatus.OK).send(docs)
   } catch (err) {
