@@ -1,48 +1,40 @@
-import express from 'express'
+import app from './server'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 import dotenv from 'dotenv'
-import compression from 'compression'
-import helmet from 'helmet'
-import cors from 'cors'
 import { error } from './utils/debug'
 import initDB from './db'
 import initRedis from './redis/init'
-import redisRoutes from './routes/redis'
-import pixelRoutes from './routes/pixel'
-import HttpStatus from 'http-status-codes'
+import { start } from './utils/debug'
+import sockets from './sockets'
 
-if (process.env.NODE_ENV !== 'test') {
-  const result = dotenv.config()
+// eslint-disable-next-line prettier/prettier
+(async () => {
+  if (process.env.NODE_ENV !== 'test') {
+    const result = dotenv.config()
 
-  if (result.error) {
-    error('%O', result.error)
-    throw result.error
+    if (result.error) {
+      error('%O', result.error)
+      throw result.error
+    }
+
+    process.env = {
+      ...process.env,
+      result,
+    }
   }
 
-  process.env = {
-    ...process.env,
-    result,
-  }
-}
+  await initRedis()
+  await initDB({ pixelSeed: process.env.PIXEL_SEED })
 
-if (process.env.NODE_ENV !== 'test') {
-  const pixelSeed =
-    process.env.PIXEL_SEED === undefined ? undefined : process.env.PIXEL_SEED
-  initRedis()
-  initDB({ pixelSeed })
-}
-const app = express()
+  const port = process.env.PORT || 4000
 
-app.get('/health', (req, res) => {
-  res.status(HttpStatus.OK).send('OK')
-})
+  const httpServer = createServer(app)
 
-app.use(compression())
-app.use(helmet())
+  const io = new Server(httpServer, { cors: { origin: '*' } })
+  sockets(io)
 
-app.use(express.json())
-app.use(cors())
-
-app.use('/pixels', pixelRoutes)
-app.use('/redis', redisRoutes)
-
-export default app
+  httpServer.listen(port, () => {
+    start('rest API is listening to port %d', port)
+  })
+})()

@@ -1,16 +1,23 @@
-import app from './index'
-import { createServer } from 'http'
-import { Server } from 'socket.io'
-import { start } from './utils/debug'
-import sockets from './sockets'
+import express from 'express'
+import compression from 'compression'
+import helmet from 'helmet'
+import cors from 'cors'
+import redisRoutes from './routes/redis'
+import pixelRoutes from './routes/pixel'
 
-const port = process.env.PORT || 4000
+const app = express()
 
-const httpServer = createServer(app)
-
-const io = new Server(httpServer, { cors: { origin: '*' } })
-sockets(io)
-
-httpServer.listen(port, () => {
-  start('rest API is listening to port %d', port)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK')
 })
+
+app.use(compression())
+app.use(helmet())
+
+app.use(express.json())
+app.use(cors())
+
+app.use('/pixels', pixelRoutes)
+app.use('/redis', redisRoutes)
+
+export default app

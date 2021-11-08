@@ -1,6 +1,5 @@
 import { error } from './debug'
 import { Error as MongooseError } from 'mongoose'
-import HttpStatus from 'http-status-codes'
 import UnauthorizedError from './UnauthorizedError'
 import NotFoundError from './NotFoundError'
 import BadRequestError from './BadRequestError'
@@ -9,22 +8,22 @@ import ForbiddenError from './ForbiddenError'
 const handleErrors = (err, res) => {
   error(err)
   if (err instanceof MongooseError.ValidationError) {
-    res.status(HttpStatus.BAD_REQUEST)
+    res.status(400)
   } else if (
     err instanceof MongooseError.DocumentNotFoundError ||
     err instanceof MongooseError.CastError
   ) {
-    res.status(HttpStatus.NOT_FOUND)
+    res.status(404)
   } else if (err instanceof ForbiddenError) {
-    res.status(HttpStatus.FORBIDDEN)
+    res.status(403)
   } else if (err instanceof UnauthorizedError) {
-    res.status(HttpStatus.UNAUTHORIZED)
+    res.status(401)
   } else if (err instanceof BadRequestError) {
-    res.status(HttpStatus.BAD_REQUEST)
+    res.status(400)
   } else if (err instanceof NotFoundError) {
-    res.status(HttpStatus.NOT_FOUND)
+    res.status(404)
   } else {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    res.status(500)
   }
   res.send(formatError(err))
 }

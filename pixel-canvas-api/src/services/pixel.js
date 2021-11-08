@@ -1,5 +1,4 @@
 import pixels from '../models/pixel'
-import HttpStatus from 'http-status-codes'
 import handleErrors from '../utils/handleErrors'
 import BadRequestError from '../utils/BadRequestError'
 import { error } from '../utils/debug'
@@ -19,7 +18,7 @@ export const getAllPixels = async (req, res) => {
 
 export const getPixelCount = async (req, res) => {
   const len = await pixels.estimatedDocumentCount()
-  res.status(HttpStatus.OK).send({ length: len })
+  res.status(200).send({ length: len })
 }
 
 export const updatePixel = async (index, color) => {
