@@ -13,9 +13,8 @@ app.get('/health', (req, res) => {
 
 app.use(compression())
 app.use(helmet())
-
-app.use(express.json())
 app.use(cors())
+app.use(express.json())
 
 app.use('/pixels', pixelRoutes)
 app.use('/redis', redisRoutes)

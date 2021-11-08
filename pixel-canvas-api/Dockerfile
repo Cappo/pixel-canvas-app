@@ -5,7 +5,7 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --production --silent
 
-COPY build ./build
+COPY dist ./dist
 COPY .env ./
 
 EXPOSE 4000
