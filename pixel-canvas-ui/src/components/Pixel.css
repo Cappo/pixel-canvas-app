@@ -1,9 +1,0 @@
-.pixel {
-  float: left;
-  transform-origin: top left;
-  position: relative;
-}
-
-.pixel:hover {
-  background-color: #ddd !important
-}
