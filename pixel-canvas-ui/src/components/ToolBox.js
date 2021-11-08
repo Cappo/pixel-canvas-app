@@ -1,25 +1,22 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { changeColor } from '../reducer'
 import { MAX_ZOOM, MIN_ZOOM } from '../config'
 import FloatingBox from './FloatingBox'
 import './ToolBox.css'
 
-// tracks current mouse location
-let mouseLoc = { x: 0, y: 0 }
-
-let translations = {
-  originX: 0,
-  originY: 0,
-  scale: MIN_ZOOM,
-  translateX: 0,
-  translateY: 0,
-}
-
 // ToolBox for adjusting zoom, panning, and selecting color
 const ToolBox = ({ canvasRef }) => {
   const ref = canvasRef
   const color = useSelector((store) => store.color)
+  const mouseLoc = useRef({ x: 0, y: 0}) // track mouse location
+  const translations = useRef({ // track current translations
+    originX: 0,
+    originY: 0,
+    scale: MIN_ZOOM,
+    translateX: 0,
+    translateY: 0,
+  })
 
   const dispatch = useDispatch()
 
@@ -28,9 +25,10 @@ const ToolBox = ({ canvasRef }) => {
   const translate = useCallback(
     (translationParam) => {
       const newTranslations = {
-        ...translations,
+        ...translations.current,
         ...translationParam,
       }
+      console.log(newTranslations)
       const { scale, originX, originY, translateX, translateY } = newTranslations
       ref.current.style.transform = `matrix(${scale.toFixed(
         1
@@ -40,7 +38,7 @@ const ToolBox = ({ canvasRef }) => {
       ref.current.style.transformOrigin = `${originX.toFixed(
         10
       )}px ${originY.toFixed(10)}px`
-      translations = newTranslations
+      translations.current = newTranslations
       // scale used by Canvas paint
       ref.current.zoomval = scale
     },
@@ -48,14 +46,14 @@ const ToolBox = ({ canvasRef }) => {
   )
 
   const increaseZoom = useCallback(() => {
-    let previousScale = translations.scale || MIN_ZOOM
+    let previousScale = translations.current.scale || MIN_ZOOM
     let newScale = previousScale * 1.1
     if (newScale > MAX_ZOOM) newScale = MAX_ZOOM
     translate({ scale: newScale })
   }, [translate])
 
   const decreaseZoom = useCallback(() => {
-    let previousScale = translations.scale || MIN_ZOOM
+    let previousScale = translations.current.scale || MIN_ZOOM
     let newScale = previousScale * 0.9
     if (newScale < MIN_ZOOM) newScale = MIN_ZOOM
     translate({ scale: newScale })
@@ -69,7 +67,7 @@ const ToolBox = ({ canvasRef }) => {
   const onScroll = useCallback(
     (e) => {
       e.preventDefault() // don't try to actually scroll
-      let { scale, originX, originY, translateX, translateY } = translations
+      let { scale, originX, originY, translateX, translateY } = translations.current
       const previousScale = scale
       // normalize zoom scale
       let newScale = previousScale + e.wheelDelta / 500
@@ -122,14 +120,14 @@ const ToolBox = ({ canvasRef }) => {
     (e) => {
       // click and drag around canvas with middle mouse button
       if (e.which === 2) {
-        const translateX = translations.translateX
-        const translateY = translations.translateY
+        const translateX = translations.current.translateX
+        const translateY = translations.current.translateY
         translate({
-          translateX: translateX - (mouseLoc.x - e.pageX),
-          translateY: translateY - (mouseLoc.y - e.pageY),
+          translateX: translateX - (mouseLoc.current.x - e.pageX),
+          translateY: translateY - (mouseLoc.current.y - e.pageY),
         })
       }
-      mouseLoc = { x: e.pageX, y: e.pageY }
+      mouseLoc.current = { x: e.pageX, y: e.pageY }
     },
     [translate]
   )
@@ -137,21 +135,21 @@ const ToolBox = ({ canvasRef }) => {
   const keyboardMove = useCallback((e) => {
     const { code } = e
     console.log(code)
-    let scale = translations.scale
+    let scale = translations.current.scale
     const speedNormalizer = 5
     const movementSpeed = MAX_ZOOM * scale / speedNormalizer
     switch (code) {
       case 'ArrowLeft':
-        translate({ translateX: translations.translateX + movementSpeed })
+        translate({ translateX: translations.current.translateX + movementSpeed })
         break
       case 'ArrowRight':
-        translate({ translateX: translations.translateX - movementSpeed })
+        translate({ translateX: translations.current.translateX - movementSpeed })
         break
       case 'ArrowUp':
-        translate({ translateY: translations.translateY + movementSpeed })
+        translate({ translateY: translations.current.translateY + movementSpeed })
         break
       case 'ArrowDown':
-        translate({ translateY: translations.translateY - movementSpeed })
+        translate({ translateY: translations.current.translateY - movementSpeed })
         break
       case 'PageUp':
         increaseZoom()

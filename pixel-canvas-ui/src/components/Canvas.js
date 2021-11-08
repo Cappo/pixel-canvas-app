@@ -5,10 +5,9 @@ import ToolBox from './ToolBox'
 import FloatingBox from './FloatingBox'
 import './Canvas.css'
 
-const changeQueue = []
-
 const Canvas2 = ({ socket }) => {
   const ref = useRef(null)
+  const changeQueue = useRef([])
   const [state, setState] = useState('painting')
   const [queueStart, setQueueStart] = useState(false)
 
@@ -45,7 +44,7 @@ const Canvas2 = ({ socket }) => {
     if (socket) {
       const onChange = message => {
         // if still fetching initial state, queue up updates for later
-        if (!queueStart) changeQueue.push(message)
+        if (!queueStart) changeQueue.current.push(message)
         // if we've already done our first paint, just pain the updates
         else paint(message)
       }
@@ -61,7 +60,7 @@ const Canvas2 = ({ socket }) => {
   // by pulling from the change queue
   useEffect(() => {
     if (queueStart) {
-      for (const change of changeQueue) {
+      for (const change of changeQueue.current) {
         paint(change)
       }
     }
