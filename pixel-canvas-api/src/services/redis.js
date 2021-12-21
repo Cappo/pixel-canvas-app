@@ -1,4 +1,3 @@
-
 import { syncPixelCacheWithDB } from '../redis/pixels'
 import { error } from '../utils/debug'
 import handleErrors from '../utils/handleErrors'

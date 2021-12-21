@@ -10,7 +10,7 @@ export const getAllPixels = async (req, res) => {
       .sort({ index: 'asc' })
       .lean()
     docs = docs.map((p) => p.color)
-    res.status(HttpStatus.OK).send(docs)
+    res.status(200).send(docs)
   } catch (err) {
     handleErrors(err, res)
   }
