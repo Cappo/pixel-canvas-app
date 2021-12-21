@@ -24,6 +24,10 @@ import sockets from './sockets'
     }
   }
 
+  if (!process.env.PIXEL_SEED) {
+    process.env.PIXEL_SEED = 1000000
+  }
+
   await initRedis()
   await initDB({ pixelSeed: process.env.PIXEL_SEED })
 

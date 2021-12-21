@@ -13,8 +13,7 @@ const options = {
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 }
 
-const initDB = async ({ pixelSeed } = {}) => {
-  const numPixels = pixelSeed === undefined ? 10000 : pixelSeed
+const initDB = async ({ pixelSeed }) => {
   try {
     await mongoose.connect(
       `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ADDR}:27017/`,
@@ -28,10 +27,11 @@ const initDB = async ({ pixelSeed } = {}) => {
   const start = new Date().getTime()
   try {
     let count = await pixels.countDocuments({})
-    if (count < numPixels) {
+    if (count < pixelSeed) {
+      count = 0
       let page = 0
       const pageSize = 100000
-      while (count < numPixels) {
+      while (count < pixelSeed) {
         let additional = pixelSeed - count
         if (additional > pageSize) additional = pageSize
         // init pixel canvas

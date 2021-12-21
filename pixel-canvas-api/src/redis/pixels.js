@@ -22,7 +22,7 @@ export const setPixelCache = async (index, buffer) => {
 }
 
 export const syncPixelCacheWithDB = async () => {
-  const cache = new Uint8ClampedArray(1000000 * 4)
+  const cache = new Uint8ClampedArray(process.env.PIXEL_SEED * 4)
   const query = await pixels
     .find({}, { color: 1, _id: 0 })
     .sort({ index: 'asc' })
