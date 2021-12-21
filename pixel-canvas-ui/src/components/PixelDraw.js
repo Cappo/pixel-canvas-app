@@ -1,21 +1,22 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
+import { useSelector } from 'react-redux'
 import './PixelDraw.css'
 import Users from './Users'
 import Canvas from './Canvas'
 import io from 'socket.io-client'
-import { randomName } from '../utils'
 import FloatingBox from './FloatingBox'
 
 const PixelDraw = () => {
   const [socket, setSocket] = useState(null)
+  const name = useSelector(store => store.auth.profileObj.name)
 
   useEffect(() => {
     const newSocket = io('http://localhost:4000')
     setSocket(newSocket)
     return () => {
       newSocket.removeAllListeners()
-      newSocket.emit('logout', randomName)
+      newSocket.emit('logout', name)
       newSocket.close()
     }
   }, [])

@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react'
-import { randomName, emoji } from '../utils'
+import { useSelector, useDispatch } from 'react-redux'
+import { GoogleLogout } from 'react-google-login'
 import FloatingBox from './FloatingBox'
+import { OAUTH_CLIENT_ID } from '../config'
+import { logout } from '../reducer'
 import './Users.css'
 
 const Users = ({ socket }) => {
   const [users, setUsers] = useState([])
+  const dispatch = useDispatch()
+  const name = useSelector(store => store.auth.profileObj.name)
 
   useEffect(() => {
-    socket.emit('login', randomName, (response) => {
+    socket.emit('login', name, (response) => {
       console.log('login', response)
       setUsers(response)
     })
@@ -20,21 +25,26 @@ const Users = ({ socket }) => {
     })
 
     return () => {
-      socket.emit('logout', randomName)
+      socket.emit('logout', name)
     }
-  }, [socket])
+  }, [socket, name])
 
   return (
     <FloatingBox right="10px" top="10px">
       <ul className="user-list">
         {users.slice(0, 5).map((u, i) => (
-          <li key={i} data-content={emoji[u.split('-')[1]] + ' '}>
+          <li key={i} data-content={'👋' + ' '}>
             {u}
-            {u === randomName ? ' (you)' : ''}
+            {u === name ? ' (you)' : ''}
           </li>
         ))}
         {users.length > 5 ? <li>{`...and ${users.length - 5} others`}</li> : null}
       </ul>
+      <GoogleLogout
+        clientId={OAUTH_CLIENT_ID}
+        buttonText="Logout"
+        onLogoutSuccess={() => dispatch(logout())}
+      />
     </FloatingBox>
   )
 }
