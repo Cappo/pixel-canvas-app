@@ -16,6 +16,9 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json())
 
+app.use('/health', (req, res) => {
+  res.status(200).send('OK')
+})
 app.use('/pixels', pixelRoutes)
 app.use('/redis', redisRoutes)
 
