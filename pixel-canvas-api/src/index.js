@@ -27,6 +27,9 @@ import sockets from './sockets'
   if (!process.env.PIXEL_SEED) {
     process.env.PIXEL_SEED = 1000000
   }
+  if (!process.env.COOLDOWN) {
+    process.env.COOLDOWN = 100
+  }
 
   await initRedis()
   await initDB({ pixelSeed: process.env.PIXEL_SEED })

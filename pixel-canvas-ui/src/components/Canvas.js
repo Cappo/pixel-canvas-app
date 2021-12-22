@@ -79,10 +79,12 @@ const Canvas2 = ({ socket }) => {
       const imageX = Math.floor((pageX - rect.left.toFixed(1)) / scale.toFixed(1))
       const imageY = Math.floor((pageY - rect.top.toFixed(1)) / scale.toFixed(1))
       const index = imageX + (dimensions * imageY)
-      socket.emit('change', { index, color }, ({ status }) => {
+      socket.emit('change', { index, color }, ({ status, error }) => {
         if (status === 'ok') {
           ctx.fillStyle = color
           ctx.fillRect(imageX,imageY, 1, 1)
+        } else {
+          console.error('There was a problem:', status, error)
         }
       })
     }
@@ -90,7 +92,6 @@ const Canvas2 = ({ socket }) => {
   // click to drag style setter
   const middleMousePressCheck = (e) => {
     const { button } = e
-    console.log(e)
     if (button === 1) {
       setState('grabbing')
     }

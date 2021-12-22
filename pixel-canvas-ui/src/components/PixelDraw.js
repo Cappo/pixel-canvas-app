@@ -13,14 +13,13 @@ const PixelDraw = () => {
   const name = useSelector(store => store.auth.profileObj.name)
 
   useEffect(() => {
-    console.log(idToken)
     const newSocket = io('http://localhost:4000', {
       auth: {
         token: idToken
       }
     })
     newSocket.on('connection_error', err => {
-      console.log(err)
+      console.error(err)
     })
     setSocket(newSocket)
     return () => {

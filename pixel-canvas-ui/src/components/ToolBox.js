@@ -28,7 +28,6 @@ const ToolBox = ({ canvasRef }) => {
         ...translations.current,
         ...translationParam,
       }
-      console.log(newTranslations)
       const { scale, originX, originY, translateX, translateY } = newTranslations
       ref.current.style.transform = `matrix(${scale.toFixed(
         1
@@ -134,7 +133,6 @@ const ToolBox = ({ canvasRef }) => {
 
   const keyboardMove = useCallback((e) => {
     const { code } = e
-    console.log(code)
     let scale = translations.current.scale
     const speedNormalizer = 5
     const movementSpeed = MAX_ZOOM * scale / speedNormalizer

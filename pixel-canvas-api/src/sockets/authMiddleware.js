@@ -8,7 +8,8 @@ const authMiddleware = async (socket, next) => {
     next(new Error('No auth present'))
   } else {
     const payload = await googleAuth(token)
-    log(payload.name + ' verified')
+    log(payload.sub + ' verified')
+    socket.user = payload.sub
     next()
   }
 }

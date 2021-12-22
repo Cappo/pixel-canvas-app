@@ -15,7 +15,6 @@ const PixelDraw = () => {
   const dispatch = useDispatch()
 
   const responseGoogle = (res) => {
-    console.log(res)
     dispatch(login(res))
   }
 
