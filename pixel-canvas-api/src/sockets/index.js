@@ -1,8 +1,11 @@
 import { sockets } from '../utils/debug'
+import authMiddleware from './authMiddleware'
 import registerUserHandler from './userHandler'
 import registerPixelHandler from './pixelHandler'
 
 const init = (io) => {
+  io.use(authMiddleware)
+
   io.sockets.on('connection', (socket) => {
     sockets('connection')
 

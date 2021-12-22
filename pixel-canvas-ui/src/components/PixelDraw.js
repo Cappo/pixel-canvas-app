@@ -9,10 +9,19 @@ import FloatingBox from './FloatingBox'
 
 const PixelDraw = () => {
   const [socket, setSocket] = useState(null)
+  const idToken = useSelector(store => store.auth.tokenObj.id_token)
   const name = useSelector(store => store.auth.profileObj.name)
 
   useEffect(() => {
-    const newSocket = io('http://localhost:4000')
+    console.log(idToken)
+    const newSocket = io('http://localhost:4000', {
+      auth: {
+        token: idToken
+      }
+    })
+    newSocket.on('connection_error', err => {
+      console.log(err)
+    })
     setSocket(newSocket)
     return () => {
       newSocket.removeAllListeners()

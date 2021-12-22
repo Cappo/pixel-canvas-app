@@ -5,6 +5,7 @@ export const log = debug('pixels:log')
 export const start = debug('pixels:start')
 export const sockets = debug('pixels:sockets')
 export const redis = debug('pixels:redis')
+export const auth = debug('pixels:auth')
 
 export default {
   error,
