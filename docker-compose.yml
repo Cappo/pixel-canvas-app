@@ -74,6 +74,8 @@ services:
       DB_PASSWORD: example
       DB_ADDR: db
       REDIS_ADDR: redis
+      COOLDOWN: 1000
+      OAUTH_CLIENT_ID: 918036586620-l07dtig8lks682dhk71l4vemhqbafjun.apps.googleusercontent.com
   ui:
     profiles:
       - frontend

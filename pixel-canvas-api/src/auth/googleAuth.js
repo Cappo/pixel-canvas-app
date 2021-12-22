@@ -13,4 +13,17 @@ const googleAuth = async (token) => {
   return payload
 }
 
+export const middleware = async (req, res, next) => {
+  try {
+    const ticket = await client.getTokenInfo(
+      req.headers.authorization.split(' ')[1]
+    )
+    log(ticket)
+    next()
+  } catch (e) {
+    log('error', e.message)
+    res.status(401).send()
+  }
+}
+
 export default googleAuth
