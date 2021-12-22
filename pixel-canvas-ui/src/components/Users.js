@@ -13,15 +13,20 @@ const Users = ({ socket }) => {
 
   useEffect(() => {
     socket.emit('login', name, (response) => {
-      console.log('login', response)
       setUsers(response)
     })
-    socket.on('join', (name) => {
-      setUsers((u) => [...u, name])
+    socket.on('join', ([id, name]) => {
+      setUsers((u) => ({...u, [id]: name}))
     })
 
-    socket.on('leave', (name) => {
-      setUsers((u) => u.filter((user) => user !== name))
+    socket.on('leave', (id) => {
+      setUsers((u) => {
+        const newUsers = {
+          ...u,
+        }
+        delete newUsers[id]
+        return newUsers
+      })
     })
 
     return () => {
@@ -29,16 +34,17 @@ const Users = ({ socket }) => {
     }
   }, [socket, name])
 
+  const userList = Array.from(Object.entries(users))
   return (
     <FloatingBox right="10px" top="10px">
       <ul className="user-list">
-        {users.slice(0, 5).map((u, i) => (
+        {userList.slice(0, 5).map(([id, name], i) => (
           <li key={i} data-content={'👋' + ' '}>
-            {u}
-            {u === name ? ' (you)' : ''}
+            {name}
+            {id === socket.id ? ' (you)' : ''}
           </li>
         ))}
-        {users.length > 5 ? <li>{`...and ${users.length - 5} others`}</li> : null}
+        {userList.length > 5 ? <li>{`...and ${userList.length - 5} others`}</li> : null}
       </ul>
       <GoogleLogout
         clientId={OAUTH_CLIENT_ID}
