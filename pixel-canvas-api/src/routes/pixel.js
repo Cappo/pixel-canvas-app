@@ -2,7 +2,7 @@ import { Router } from 'express'
 
 import { getAllPixels, getPixelCount } from '../services/pixel'
 
-const router = Router()
+const router = Router({ mergeParams: true })
 /**
  * TEMPLATES
  */

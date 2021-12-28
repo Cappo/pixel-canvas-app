@@ -4,6 +4,7 @@ const paintstrokeSchema = new mongoose.Schema(
   {
     user: mongoose.Schema.Types.String,
     index: mongoose.Schema.Types.Number, // index of pixel painted
+    canvasId: mongoose.Schema.Types.ObjectId,
   },
   {
     strict: true,

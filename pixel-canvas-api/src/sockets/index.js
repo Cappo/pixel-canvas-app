@@ -7,7 +7,8 @@ const init = (io) => {
   io.use(authMiddleware)
 
   io.sockets.on('connection', (socket) => {
-    sockets('connection')
+    sockets('connection', socket.handshake.query)
+    socket.join(socket.handshake.query.canvasId)
 
     registerUserHandler(io, socket)
     registerPixelHandler(io, socket)

@@ -1,8 +1,5 @@
 import mongoose from 'mongoose'
 import { log, error } from './utils/debug'
-import pixels from './models/pixel'
-import { syncPixelCacheWithDB } from './redis/pixels'
-import { client } from './redis/init'
 
 mongoose.Promise = global.Promise
 
@@ -23,48 +20,6 @@ const initDB = async ({ pixelSeed }) => {
     // return mongoServer
   } catch (err) {
     error('Failed to init DB', err)
-  }
-  const start = new Date().getTime()
-  try {
-    let count = await pixels.countDocuments({})
-    if (count < pixelSeed) {
-      count = 0
-      let page = 0
-      const pageSize = 100000
-      while (count < pixelSeed) {
-        let additional = pixelSeed - count
-        if (additional > pageSize) additional = pageSize
-        // init pixel canvas
-        const pixelArray = new Array(additional)
-        for (let i = 0; i < additional; i++) {
-          pixelArray[i] = { index: page * pageSize + i }
-        }
-        try {
-          await pixels.insertMany(pixelArray, {
-            lean: true,
-          })
-          count += additional
-          page++
-        } catch (err) {
-          error(err)
-        }
-      }
-    }
-  } catch (err) {
-    error('failed during db population', err)
-  } finally {
-    try {
-      await pixels.ensureIndexes()
-      const redisPixelCount = await client.bitcount('pixels')
-      if (redisPixelCount === 0) {
-        await syncPixelCacheWithDB()
-      }
-      const end = new Date().getTime()
-      log('hydration time', `${((end - start) / 1000).toFixed(1)} seconds`)
-      log('DB ready!')
-    } catch (e) {
-      error('error during index or redis sync', e)
-    }
   }
 }
 

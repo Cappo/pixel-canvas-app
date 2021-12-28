@@ -17,3 +17,7 @@ down:
 	docker-compose down
 clean:
 	rm -rf db-cache redis-cache
+create-canvas:
+	curl -X POST -H "Content-Type: application/json" \
+    -d '{"name": "Example Canvas", "width": 100, "height": 100}' \
+    http://localhost:4000/canvas

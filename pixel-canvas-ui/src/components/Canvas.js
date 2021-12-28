@@ -5,7 +5,7 @@ import ToolBox from './ToolBox'
 import FloatingBox from './FloatingBox'
 import './Canvas.css'
 
-const Canvas2 = ({ socket }) => {
+const Canvas2 = ({ socket, canvas }) => {
   const ref = useRef(null)
   const changeQueue = useRef([])
   const [state, setState] = useState('painting')
@@ -14,30 +14,32 @@ const Canvas2 = ({ socket }) => {
   const color = useSelector(store => store.color)
 
   // const dimensions = Math.sqrt(pixels.length)
-  const dimensions = 1000
+  // const dimensions = 1000
 
   // converts index to x/y and color array to hex value then paints
   const paint = useCallback(({ index, color}) => {
     const canvas = ref.current
     const ctx = canvas.getContext('2d')
-    const x = index % dimensions
-    const y = Math.floor(index / dimensions)
+    const x = index % canvas.width
+    const y = Math.floor(index / canvas.width)
     ctx.fillStyle = color
     ctx.fillRect(x, y, 1, 1)
-  }, [dimensions])
+  }, [])
 
   useEffect(() => {
-    if (ref && ref.current) {
+    if (ref && ref.current && canvas) {
+      console.log(canvas, 'init')
       socket.emit('init', ({ buffer }) => {
+        console.log(buffer)
         const canvas = ref.current
         const ctx = canvas.getContext('2d')
         const data = new Uint8ClampedArray(buffer)
-        const imageData = new ImageData(data, dimensions)
+        const imageData = new ImageData(data, canvas.width, canvas.height)
         ctx.putImageData(imageData, 0, 0)
         setQueueStart(true)
       })
     }
-  }, [dimensions, socket])
+  }, [socket, canvas])
 
   // listen for change messages
   useEffect(() => {
@@ -78,7 +80,7 @@ const Canvas2 = ({ socket }) => {
       const rect = ref.current.getBoundingClientRect()
       const imageX = Math.floor((pageX - rect.left.toFixed(1)) / scale.toFixed(1))
       const imageY = Math.floor((pageY - rect.top.toFixed(1)) / scale.toFixed(1))
-      const index = imageX + (dimensions * imageY)
+      const index = imageX + (canvas.width * imageY)
       socket.emit('change', { index, color }, ({ status, error }) => {
         if (status === 'ok') {
           ctx.fillStyle = color
@@ -109,8 +111,8 @@ const Canvas2 = ({ socket }) => {
       {queueStart === false ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null}
       <canvas
         id="canvas"
-        width={dimensions}
-        height={dimensions}
+        width={canvas.width}
+        height={canvas.height}
         ref={ref}
         onClick={paintPixel}
         onMouseDownCapture={middleMousePressCheck}

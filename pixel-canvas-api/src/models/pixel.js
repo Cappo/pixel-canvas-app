@@ -10,8 +10,10 @@ const pixelSchema = new mongoose.Schema(
     index: {
       type: mongoose.Schema.Types.Number,
       required: true,
-      unique: true,
-      index: true,
+    },
+    canvasId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
   },
   {
@@ -20,6 +22,7 @@ const pixelSchema = new mongoose.Schema(
     autoIndex: false,
   }
 )
+pixelSchema.index({ canvasId: 1, index: 1 }, { unique: true })
 
 const model = mongoose.model('pixel', pixelSchema)
 

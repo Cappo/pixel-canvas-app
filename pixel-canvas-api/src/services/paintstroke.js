@@ -11,11 +11,12 @@ export const getLastPaintstroke = async (user) => {
   }
 }
 
-export const createPaintstroke = async (index, user) => {
+export const createPaintstroke = async (canvasId, index, user) => {
   try {
     await paintstroke.create({
       index,
       user,
+      canvasId,
     })
   } catch (e) {
     error(e)

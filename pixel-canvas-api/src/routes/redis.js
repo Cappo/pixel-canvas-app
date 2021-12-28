@@ -2,7 +2,7 @@ import { Router } from 'express'
 
 import { syncRedis } from '../services/redis'
 
-const router = Router()
+const router = Router({ mergeParams: true })
 /**
  * TEMPLATES
  */

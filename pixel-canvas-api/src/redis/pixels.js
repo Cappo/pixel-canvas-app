@@ -1,30 +1,34 @@
 import { client } from './init'
-import { error } from '../utils/debug'
+import { error, redis } from '../utils/debug'
 import pixels from '../models/pixel'
+import canvas from '../models/canvas'
 
-export const getPixelCache = async () => {
+export const getPixelCache = async (canvasId) => {
   try {
-    const data = await client.getBuffer('pixels')
+    redis(canvasId)
+    const data = await client.getBuffer(canvasId)
+    redis(data)
     return data
   } catch (e) {
     error('failed to getPixelCache', e)
   }
 }
 
-export const setPixelCache = async (index, buffer) => {
+export const setPixelCache = async (canvasId, index, buffer) => {
   try {
     const offset = index * 4
-    const resp = await client.setrangeBuffer('pixels', offset, buffer)
+    const resp = await client.setrangeBuffer(canvasId, offset, buffer)
     return resp
   } catch (e) {
     error('failed to setPixelCache', e)
   }
 }
 
-export const syncPixelCacheWithDB = async () => {
-  const cache = new Uint8ClampedArray(process.env.PIXEL_SEED * 4)
+export const syncPixelCacheWithDB = async (canvasId) => {
+  const { height, width } = await canvas.findById(canvasId)
+  const cache = new Uint8ClampedArray(height * width * 4)
   const query = await pixels
-    .find({}, { color: 1, _id: 0 })
+    .find({ canvasId }, { color: 1, _id: 0 })
     .sort({ index: 'asc' })
     .lean()
   query.forEach((pixel, i) => {
@@ -35,5 +39,5 @@ export const syncPixelCacheWithDB = async () => {
     cache[start + 2] = color[2]
     cache[start + 3] = 255
   })
-  await client.set('pixels', Buffer.from(cache))
+  await client.set(canvasId, Buffer.from(cache))
 }

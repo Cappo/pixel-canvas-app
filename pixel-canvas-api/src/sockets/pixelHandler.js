@@ -16,16 +16,16 @@ const pixelHandler = (io, socket) => {
     } else {
       log('change', message)
       log('user', socket.user)
-      const { index, color } = message
+      const { canvasId, index, color } = message
       const buffer = Buffer.from(color.slice(1), 'hex')
       Promise.all([
         updatePixel(index, Array.from(buffer)),
-        setPixelCache(index, buffer),
-        createPaintstroke(index, socket.user),
+        setPixelCache(canvasId, index, buffer),
+        createPaintstroke(canvasId, index, socket.user),
       ])
         .then(() => {
           cb({ status: 'ok' })
-          socket.broadcast.emit('change', message)
+          socket.to(canvasId).emit('change', message)
         })
         .catch((e) => {
           cb({ status: 'error', error: e.message })
@@ -35,7 +35,9 @@ const pixelHandler = (io, socket) => {
 
   socket.on('init', async (cb) => {
     log('init')
-    const data = await getPixelCache()
+    log(socket.rooms)
+    const [, canvas] = socket.rooms
+    const data = await getPixelCache(canvas)
     cb({ buffer: data })
   })
 }

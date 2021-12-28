@@ -13,5 +13,6 @@ make install
 make build
 make start
 # in new tab or directly in browser
+make create-canvas # creates a new canvas that is 100px x 100px
 open http://localhost:3000
 ```

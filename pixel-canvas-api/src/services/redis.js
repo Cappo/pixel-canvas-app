@@ -4,7 +4,7 @@ import handleErrors from '../utils/handleErrors'
 
 export const syncRedis = async (req, res) => {
   try {
-    await syncPixelCacheWithDB()
+    await syncPixelCacheWithDB(req.params.canvasId)
     res.status(200).send({ status: 'OK' })
   } catch (e) {
     error('There was a problem trying to sync redis with the database')

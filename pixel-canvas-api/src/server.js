@@ -3,8 +3,7 @@ import compression from 'compression'
 import helmet from 'helmet'
 import cors from 'cors'
 // import { middleware as auth } from './auth/googleAuth'
-import redisRoutes from './routes/redis'
-import pixelRoutes from './routes/pixel'
+import canvasRoutes from './routes/canvas'
 
 const app = express()
 
@@ -20,7 +19,6 @@ app.use(express.json())
 app.use('/health', (req, res) => {
   res.status(200).send('OK')
 })
-app.use('/pixels', /*auth,*/ pixelRoutes)
-app.use('/redis', /*auth,*/ redisRoutes)
+app.use('/canvas', /*auth, */ canvasRoutes)
 
 export default app
