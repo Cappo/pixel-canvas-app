@@ -17,9 +17,12 @@ const pixelHandler = (io, socket) => {
       log('change', message)
       log('user', socket.user)
       const { canvasId, index, color } = message
+      if (!canvasId || !index || !color) {
+        cb({ status: 'error', error: 'Malformed message' })
+      }
       const buffer = Buffer.from(color.slice(1), 'hex')
       Promise.all([
-        updatePixel(index, Array.from(buffer)),
+        updatePixel(canvasId, index, Array.from(buffer)),
         setPixelCache(canvasId, index, buffer),
         createPaintstroke(canvasId, index, socket.user),
       ])

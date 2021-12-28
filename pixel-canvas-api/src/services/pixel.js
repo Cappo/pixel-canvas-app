@@ -24,9 +24,9 @@ export const getPixelCount = async (req, res) => {
   res.status(200).send({ length: len })
 }
 
-export const updatePixel = async (index, color) => {
+export const updatePixel = async (canvasId, index, color) => {
   try {
-    const search = { index }
+    const search = { index, canvasId }
     const update = {
       $set: {
         color,

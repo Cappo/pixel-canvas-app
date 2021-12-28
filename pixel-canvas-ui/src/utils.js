@@ -1,3 +1,7 @@
+export const classNames = (...classes) => {
+  return classes.filter(Boolean).join(' ')
+}
+
 const seed = '0123456789abcdef'
 export const getRandomColor = () => {
   const choices = []

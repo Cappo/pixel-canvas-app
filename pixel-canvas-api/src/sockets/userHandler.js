@@ -3,11 +3,11 @@ import { log } from '../utils/debug'
 const users = {}
 
 const userHandler = (io, socket) => {
-  const login = (name, cb) => {
-    users[socket.id] = name
+  const login = (profile, cb) => {
+    users[socket.id] = profile
     cb(users)
-    socket.broadcast.emit('join', [socket.id, name])
-    log('login', name)
+    socket.broadcast.emit('join', [socket.id, profile])
+    log('login', profile)
   }
 
   const logout = () => {

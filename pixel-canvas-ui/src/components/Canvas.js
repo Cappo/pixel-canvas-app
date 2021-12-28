@@ -74,14 +74,14 @@ const Canvas2 = ({ socket, canvas }) => {
   // if successful, paint the pixel
   const paintPixel =
     ({ pageX, pageY }) => {
-      const canvas = ref.current
-      const ctx = canvas.getContext('2d')
-      const scale = canvas.zoomval !== undefined ? canvas.zoomval : MIN_ZOOM
+      const canvasRef = ref.current
+      const ctx = canvasRef.getContext('2d')
+      const scale = canvasRef.zoomval !== undefined ? canvasRef.zoomval : MIN_ZOOM
       const rect = ref.current.getBoundingClientRect()
       const imageX = Math.floor((pageX - rect.left.toFixed(1)) / scale.toFixed(1))
       const imageY = Math.floor((pageY - rect.top.toFixed(1)) / scale.toFixed(1))
       const index = imageX + (canvas.width * imageY)
-      socket.emit('change', { index, color }, ({ status, error }) => {
+      socket.emit('change', { canvasId: canvas._id, index, color }, ({ status, error }) => {
         if (status === 'ok') {
           ctx.fillStyle = color
           ctx.fillRect(imageX,imageY, 1, 1)
@@ -106,8 +106,15 @@ const Canvas2 = ({ socket, canvas }) => {
     }
   }
 
+  const stateClass = (state) => ({
+    grabbing: 'cursor-grabbing',
+    painting: 'cursor-crosshair'
+  }[state])
+
   return (
     <>
+    <ToolBox canvasRef={ref} name={canvas.name} socket={socket} />
+    <div className="canvas-container h-full pt-8 flex items-center justify-center">
       {queueStart === false ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null}
       <canvas
         id="canvas"
@@ -117,9 +124,9 @@ const Canvas2 = ({ socket, canvas }) => {
         onClick={paintPixel}
         onMouseDownCapture={middleMousePressCheck}
         onMouseUpCapture={middleMouseReleaseCheck}
-        className={state}>
+        className={stateClass(state) + ' hover:shadow hover:shadow-violet-200/50'}>
       </canvas>
-      <ToolBox canvasRef={ref} />
+    </div>
     </>
   )
 }

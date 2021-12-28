@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import './PixelDraw.css'
-import Users from './Users'
 import Canvas from './Canvas'
 import io from 'socket.io-client'
 import FloatingBox from './FloatingBox'
@@ -50,18 +48,11 @@ const PixelDraw = () => {
     return socket ? <Canvas socket={socket} canvas={canvas} /> : <FloatingBox top={10} left={10}>Connecting...</FloatingBox>
   }
 
-  const renderUsers = () => {
-    return socket ? <Users socket={socket} /> : null
-  }
-
   return (
-    <div className="application">
-      <Helmet title="DrawPixel" />
-      <div id="view-port">
-        {renderCanvas()}
-        {renderUsers()}
-      </div>
-    </div>
+    <>
+      {renderCanvas()}
+      {/* {renderUsers()} */}
+    </>
   )
 }
 
