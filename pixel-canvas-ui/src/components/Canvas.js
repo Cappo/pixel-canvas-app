@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { MIN_ZOOM } from '../config'
 import ToolBox from './ToolBox'
+import Navbar from './Navbar'
 
 const Canvas2 = ({ socket, canvas }) => {
   const ref = useRef(null)
@@ -106,7 +107,10 @@ const Canvas2 = ({ socket, canvas }) => {
 
   return (
     <>
-    <ToolBox canvasRef={ref} name={canvas.name} socket={socket} />
+    <div className="flex flex-col space-0  fixed top-0 left-0 right-0 z-10">
+      <Navbar socket={socket} name={canvas.name} />
+      <ToolBox canvasRef={ref} name={canvas.name} socket={socket} />
+    </div>
     <div className="h-full pt-8 flex items-center justify-center bg-violet-50 bg-graph-light">
       <canvas
         id="canvas"

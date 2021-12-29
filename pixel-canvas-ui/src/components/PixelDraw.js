@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Canvas from './Canvas'
 import io from 'socket.io-client'
-import Navbar from './Navbar'
-import ToolBox from './ToolBox'
 import { useParams } from 'react-router-dom'
 
 const PixelDraw = () => {
@@ -47,10 +45,6 @@ const PixelDraw = () => {
 
   return socket &&
     <div className="overflow-hidden h-full">
-      <div className="flex flex-col space-0  fixed top-0 left-0 right-0 z-10">
-        <Navbar socket={socket} name={canvas.name} />
-        <ToolBox />
-      </div>
       <Canvas socket={socket} canvas={canvas} />
     </div>
 }
