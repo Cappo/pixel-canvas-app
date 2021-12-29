@@ -7,7 +7,6 @@ export const getPixelCache = async (canvasId) => {
   try {
     redis(canvasId)
     const data = await client.getBuffer(canvasId)
-    redis(data)
     return data
   } catch (e) {
     error('failed to getPixelCache', e)

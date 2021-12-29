@@ -14,6 +14,6 @@ router.get('/', getAllCanvases)
 router.get('/:canvasId', getCanvasById)
 
 router.use('/:canvasId/pixels', pixelRoutes)
-router.use('/:canvasId/redis', redisRoutes)
+router.use('/:canvasId/cache', redisRoutes)
 
 export default router

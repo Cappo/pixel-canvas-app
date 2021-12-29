@@ -4,22 +4,24 @@ import Canvas from './Canvas'
 import io from 'socket.io-client'
 import Navbar from './Navbar'
 import ToolBox from './ToolBox'
+import { useParams } from 'react-router-dom'
 
 const PixelDraw = () => {
   const [socket, setSocket] = useState(null)
   const [canvas, setCanvas] = useState(null)
   const idToken = useSelector(store => store.auth.tokenObj.id_token)
   const name = useSelector(store => store.auth.profileObj.name)
+  const params = useParams()
 
   // get canvas
   useEffect(() => {
     const getCanvas = async () => {
-      const response = await fetch('http://localhost:4000/canvas')
+      const response = await fetch('http://localhost:4000/canvas/' + params.canvasId)
       const data = await response.json()
-      if (data.length) setCanvas(data[0])
+      setCanvas(data)
     }
     getCanvas()
-  }, [])
+  }, [params])
   // setup socket
   useEffect(() => {
     if (canvas) {

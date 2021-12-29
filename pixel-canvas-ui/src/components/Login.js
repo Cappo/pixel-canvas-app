@@ -1,26 +1,36 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { GoogleLogin } from 'react-google-login'
 import { login } from '../reducer'
 import { OAUTH_CLIENT_ID } from '../config'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const PixelDraw = () => {
   const [sso, setSso] = useState(() => {
     const storage = window.localStorage.getItem('sso')
     return storage === null ? false : storage
   })
+  const auth = useSelector(store => store.auth)
+  const location = useLocation()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const responseGoogle = (res) => {
     dispatch(login(res))
   }
 
+  useEffect(() => {
+    if (auth) {
+      navigate(location.state.from, { replace: true })
+    }
+  })
+
   return (
-    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-md w-full space-y-8">
+    <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
         <div>
-          <img class="mx-auto h-20 w-auto" src="https://www.svgrepo.com/show/275959/space-invaders.svg" alt="Workflow" />
-          <h1 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <img className="mx-auto h-20 w-auto" src="https://www.svgrepo.com/show/275959/space-invaders.svg" alt="Workflow" />
+          <h1 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Pixel Canvas App
           </h1>
           <p className="mt-2 text-center text-sm text-gray-600">
@@ -28,16 +38,16 @@ const PixelDraw = () => {
           </p>
         </div>
 
-        <form class="mt-8 space-y-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <input value={sso} onChange={() => { window.localStorage.setItem('sso', !sso); setSso(!sso) }} id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
-              <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+        <form className="mt-8 space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input value={sso} onChange={() => { window.localStorage.setItem('sso', !sso); setSso(!sso) }} id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                 Remember me
               </label>
             </div>
 
-            <div class="text-sm">
+            <div className="text-sm">
             </div>
           </div>
 
@@ -51,9 +61,9 @@ const PixelDraw = () => {
               isSignedIn={sso}
               render={(renderProps => {
                 return (
-                  <button onClick={renderProps.onClick} disabled={renderProps.disabled} class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-grey bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                      <svg class="h-6 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <button onClick={renderProps.onClick} disabled={renderProps.disabled} className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-grey bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                      <svg className="h-6 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                           <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
                           <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"/>

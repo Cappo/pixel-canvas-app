@@ -1,17 +1,31 @@
 import ReactDOM from 'react-dom'
+import Helmet from 'react-helmet'
 import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware } from 'redux'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import reducer from './reducer'
-import App from './App'
+import Home from './components/Home'
+import Login from './components/Login'
 import './index.css'
+import RequireAuth from './components/RequireAuth'
+import PixelDraw from './components/PixelDraw'
 
 const store = createStore(reducer, applyMiddleware(thunk))
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Helmet defaultTitle="Pixel Canvas App" titleTemplate="Pixel Canvas App | %s"/>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<RequireAuth />}>
+          <Route index element={<Home />} />
+          <Route path=":canvasId" element={<PixelDraw />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </HashRouter>
   </Provider>,
   document.getElementById('root')
 )
