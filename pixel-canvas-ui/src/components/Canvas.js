@@ -23,9 +23,7 @@ const Canvas2 = ({ socket, canvas }) => {
 
   useEffect(() => {
     if (ref && ref.current && canvas) {
-      console.log(canvas, 'init')
       socket.emit('init', ({ buffer }) => {
-        console.log(buffer)
         const canvas = ref.current
         const ctx = canvas.getContext('2d')
         const data = new Uint8ClampedArray(buffer)

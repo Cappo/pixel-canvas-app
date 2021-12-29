@@ -12,7 +12,6 @@ const Users = ({ socket }) => {
   const dispatch = useDispatch()
   const po = useSelector(store => store.auth.profileObj)
   const { name, imageUrl } = po
-  console.log(po)
 
   useEffect(() => {
     socket.emit('login', { name, imageUrl }, (response) => {
@@ -38,7 +37,6 @@ const Users = ({ socket }) => {
   }, [socket, name, imageUrl])
 
   const userList = Array.from(Object.entries(users))
-  console.log(userList)
 
   return (
     <>

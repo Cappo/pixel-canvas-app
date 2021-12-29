@@ -16,7 +16,6 @@ const PixelDraw = () => {
     const getCanvas = async () => {
       const response = await fetch('http://localhost:4000/canvas')
       const data = await response.json()
-      console.log(data)
       if (data.length) setCanvas(data[0])
     }
     getCanvas()
