@@ -4,8 +4,6 @@ import { changeColor } from '../reducer'
 import { MAX_ZOOM, MIN_ZOOM } from '../config'
 import { ZoomInIcon, ZoomOutIcon, PencilIcon } from '@heroicons/react/outline'
 import { HexColorPicker } from 'react-colorful'
-import Users from './Users'
-import './ToolBox.css'
 import { Popover, Transition } from '@headlessui/react'
 
 // ToolBox for adjusting zoom, panning, and selecting color
@@ -180,39 +178,7 @@ const ToolBox = ({ canvasRef, name, socket }) => {
     }
   }, [ref, translate, onScroll, mouseMove, keyboardMove])
 
-  // return (
-  //   <FloatingBox bottom="10px" left="10px">
-  //     <div className="toolbox">
-  //       <input type="color" value={color} onChange={handleColorChange} />
-  //       <button onClick={increaseZoom}>+</button>
-  //       <button onClick={decreaseZoom}>-</button>
-  //     </div>
-  //   </FloatingBox>
-  // )
-
   return (
-    <div className="flex flex-col space-0  fixed top-0 left-0 right-0 z-10">
-      <nav className="bg-gray-800">
-        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-          <div className="relative flex items-center justify-between h-16">
-            <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="flex-shrink-0 flex items-center">
-                <img
-                  className="block h-8 w-auto"
-                  src="https://www.svgrepo.com/show/275959/space-invaders.svg"
-                  alt="Pixel Canvas App"
-                />
-              </div>
-              <div className="sm:block ml-6">
-                <h1 className="text-center text-2xl font-extrabold rounded-md text-gray-300">{name}</h1>
-              </div>
-            </div>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <Users socket={socket} />
-            </div>
-          </div>
-        </div>
-      </nav>
       <div className="bg-purple-50 border-b-gray-300 border-b relative flex items-center justify-center">
         <div className="rounded-md text-sm font-medium flex justify-between py-2">
           <Popover className="relative">
@@ -242,7 +208,6 @@ const ToolBox = ({ canvasRef, name, socket }) => {
           </button>
        </div>
       </div>
-    </div>
   )
 }
 

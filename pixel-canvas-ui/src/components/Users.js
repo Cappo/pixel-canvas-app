@@ -5,7 +5,6 @@ import { Menu, Transition } from '@headlessui/react'
 import { classNames } from '../utils'
 import { OAUTH_CLIENT_ID } from '../config'
 import { logout } from '../reducer'
-import './Users.css'
 import UserExt from './UserExt'
 
 const Users = ({ socket }) => {

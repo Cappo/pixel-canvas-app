@@ -2,8 +2,6 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { MIN_ZOOM } from '../config'
 import ToolBox from './ToolBox'
-import FloatingBox from './FloatingBox'
-import './Canvas.css'
 
 const Canvas2 = ({ socket, canvas }) => {
   const ref = useRef(null)
@@ -12,9 +10,6 @@ const Canvas2 = ({ socket, canvas }) => {
   const [queueStart, setQueueStart] = useState(false)
 
   const color = useSelector(store => store.color)
-
-  // const dimensions = Math.sqrt(pixels.length)
-  // const dimensions = 1000
 
   // converts index to x/y and color array to hex value then paints
   const paint = useCallback(({ index, color}) => {
@@ -114,8 +109,7 @@ const Canvas2 = ({ socket, canvas }) => {
   return (
     <>
     <ToolBox canvasRef={ref} name={canvas.name} socket={socket} />
-    <div className="canvas-container h-full pt-8 flex items-center justify-center">
-      {queueStart === false ? <FloatingBox top={10} left={10}>Fetching pixels...</FloatingBox> : null}
+    <div className="h-full pt-8 flex items-center justify-center bg-violet-50 bg-graph-light">
       <canvas
         id="canvas"
         width={canvas.width}
@@ -124,7 +118,7 @@ const Canvas2 = ({ socket, canvas }) => {
         onClick={paintPixel}
         onMouseDownCapture={middleMousePressCheck}
         onMouseUpCapture={middleMouseReleaseCheck}
-        className={stateClass(state) + ' hover:shadow hover:shadow-violet-200/50'}>
+        className={stateClass(state) + ' hover:shadow hover:shadow-violet-200/50 [image-rendering:pixelated]'}>
       </canvas>
     </div>
     </>

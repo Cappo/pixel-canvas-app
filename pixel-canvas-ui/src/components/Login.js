@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { useDispatch } from 'react-redux'
 import { GoogleLogin } from 'react-google-login'
 import { login } from '../reducer'
 import { OAUTH_CLIENT_ID } from '../config'
-import './PixelDraw.css'
 
 const PixelDraw = () => {
   const [sso, setSso] = useState(() => {

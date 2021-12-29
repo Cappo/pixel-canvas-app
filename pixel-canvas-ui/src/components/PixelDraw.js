@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import './PixelDraw.css'
 import Canvas from './Canvas'
 import io from 'socket.io-client'
-import FloatingBox from './FloatingBox'
+import Navbar from './Navbar'
+import ToolBox from './ToolBox'
 
 const PixelDraw = () => {
   const [socket, setSocket] = useState(null)
@@ -44,16 +44,14 @@ const PixelDraw = () => {
     }
   }, [canvas, idToken, name])
 
-  const  renderCanvas = () => {
-    return socket ? <Canvas socket={socket} canvas={canvas} /> : <FloatingBox top={10} left={10}>Connecting...</FloatingBox>
-  }
-
-  return (
-    <>
-      {renderCanvas()}
-      {/* {renderUsers()} */}
-    </>
-  )
+  return socket &&
+    <div className="overflow-hidden h-full">
+      <div className="flex flex-col space-0  fixed top-0 left-0 right-0 z-10">
+        <Navbar socket={socket} name={canvas.name} />
+        <ToolBox />
+      </div>
+      <Canvas socket={socket} canvas={canvas} />
+    </div>
 }
 
 export default PixelDraw
