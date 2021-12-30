@@ -19,6 +19,6 @@ export const bufferToArray = async (req, res) => {
     // const data = new Uint8ClampedArray(buffer)
   } catch (e) {
     error('Could not convert cache')
-    handleErrors(e)
+    handleErrors(e, res)
   }
 }

@@ -24,6 +24,7 @@ const canvasSchema = new mongoose.Schema(
     strict: true,
     versionKey: false,
     autoIndex: true,
+    timestamps: true,
   }
 )
 

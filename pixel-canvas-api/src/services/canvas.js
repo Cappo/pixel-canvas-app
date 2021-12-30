@@ -3,7 +3,7 @@ import handleErrors from '../utils/handleErrors'
 import { seedPixelsForCanvas } from './pixel'
 
 export const getAllCanvases = async (req, res) => {
-  const docs = await canvas.find({}).lean()
+  const docs = await canvas.find({}).sort({ createdAt: -1, _id: -1 }).lean()
   res.status(200).send(docs)
 }
 
@@ -24,12 +24,12 @@ export const createCanvas = async (req, res) => {
       const doc = await canvas.create({
         width,
         height,
-        name,
+        name: name.length ? name : undefined,
       })
       seedPixelsForCanvas(doc._id) // async process, do not wait during HTTP request
       res.status(201).send(doc)
     } catch (e) {
-      handleErrors(e)
+      handleErrors(e, res)
     }
   }
 }
