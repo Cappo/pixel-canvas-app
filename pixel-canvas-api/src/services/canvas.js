@@ -1,6 +1,6 @@
 import canvas from '../models/canvas'
 import handleErrors from '../utils/handleErrors'
-import { seedPixelsForCanvas } from './pixel'
+import { syncPixelCacheWithDB } from '../redis/pixels'
 
 export const getAllCanvases = async (req, res) => {
   const docs = await canvas.find({}).sort({ createdAt: -1, _id: -1 }).lean()
@@ -26,7 +26,7 @@ export const createCanvas = async (req, res) => {
         height,
         name: name.length ? name : undefined,
       })
-      seedPixelsForCanvas(doc._id) // async process, do not wait during HTTP request
+      await syncPixelCacheWithDB(doc._id)
       res.status(201).send(doc)
     } catch (e) {
       handleErrors(e, res)

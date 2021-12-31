@@ -25,18 +25,34 @@ export const setPixelCache = async (canvasId, index, buffer) => {
 
 export const syncPixelCacheWithDB = async (canvasId) => {
   const { height, width } = await canvas.findById(canvasId)
-  const cache = new Uint8ClampedArray(height * width * 4)
+  const size = height * width * 4
+  const cache = new Uint8ClampedArray(size)
   const query = await pixels
-    .find({ canvasId }, { color: 1, _id: 0 })
+    .find({ canvasId }, { color: 1, index: 1, _id: 0 })
     .sort({ index: 'asc' })
     .lean()
-  query.forEach((pixel, i) => {
-    const { color } = pixel
+
+  let j = 0
+  let end = query.length === 0
+  for (let i = 0; i < size; i++) {
     const start = i * 4
-    cache[start + 0] = color[0]
-    cache[start + 1] = color[1]
-    cache[start + 2] = color[2]
-    cache[start + 3] = 255
-  })
+    let ptr = query[j]
+    if (!end && ptr.index === i) {
+      cache[start + 0] = ptr.color[0]
+      cache[start + 1] = ptr.color[1]
+      cache[start + 2] = ptr.color[2]
+      cache[start + 3] = 255
+      if (j === query.length - 1) {
+        end = true
+      } else {
+        j++
+      }
+    } else {
+      cache[start + 0] = 255
+      cache[start + 1] = 255
+      cache[start + 2] = 255
+      cache[start + 3] = 255
+    }
+  }
   await client.set(canvasId, Buffer.from(cache))
 }

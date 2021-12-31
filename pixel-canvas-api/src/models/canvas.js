@@ -14,11 +14,6 @@ const canvasSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.String,
       default: 'Untitled',
     },
-    status: {
-      type: mongoose.Schema.Types.String,
-      enum: ['BUILDING', 'READY'],
-      default: 'BUILDING',
-    },
   },
   {
     strict: true,
