@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { MIN_ZOOM } from '../config'
 import ToolBox from './ToolBox'
 import Navbar from './Navbar'
+import { notify } from '../reducer'
 
 const Canvas2 = ({ socket, canvas }) => {
   const ref = useRef(null)
   const changeQueue = useRef([])
   const [state, setState] = useState('painting')
   const [queueStart, setQueueStart] = useState(false)
+  const dispatch = useDispatch()
 
   const color = useSelector(store => store.color)
 
@@ -79,9 +81,13 @@ const Canvas2 = ({ socket, canvas }) => {
         if (status === 'ok') {
           ctx.fillStyle = color
           ctx.fillRect(imageX,imageY, 1, 1)
-        } else {
-          console.error('There was a problem:', status, error)
+          return
         }
+        if (status === 'cooldown') {
+          dispatch(notify('Cooldown in effect, please wait before painting again.', 'Cooldown'))
+          return
+        }
+        dispatch(notify(`[${status}] There was a problem: ${error || 'No error message provided'}.`, 'Error'))
       })
     }
 

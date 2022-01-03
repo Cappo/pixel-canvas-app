@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Canvas from './Canvas'
 import io from 'socket.io-client'
 import { useParams } from 'react-router-dom'
+import { notify } from '../reducer'
 
 const PixelDraw = () => {
   const [socket, setSocket] = useState(null)
@@ -10,6 +11,7 @@ const PixelDraw = () => {
   const idToken = useSelector(store => store.auth.tokenObj.id_token)
   const name = useSelector(store => store.auth.profileObj.name)
   const params = useParams()
+  const dispatch = useDispatch()
 
   // get canvas
   useEffect(() => {
@@ -32,7 +34,7 @@ const PixelDraw = () => {
         }
       })
       newSocket.on('connection_error', err => {
-        console.error(err)
+        dispatch(notify(err, 'Error'))
       })
       setSocket(newSocket)
       return () => {

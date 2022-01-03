@@ -19,8 +19,8 @@ const Home = () => {
   }
 
   return (
-    <div className="bg-violet-50/20 h-full relative overflow-hidden ">
-        <div className="relative rounded-xl overflow-auto flex flex-col h-full justify-center">
+    <div className="bg-violet-50 h-full relative overflow-hidden ">
+        <div className="relative overflow-auto flex flex-col h-full justify-center">
           <div className="container mb-28 flex container mx-auto px-2 sm:px-0">
             <h1 className="text-5xl font-extrabold text-gray-900 grow">Gallery</h1>
             <NewCanvas addCanvas={addCanvas} />

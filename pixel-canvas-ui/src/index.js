@@ -8,6 +8,7 @@ import thunk from 'redux-thunk'
 import reducer from './reducer'
 import Home from './components/Home'
 import Login from './components/Login'
+import ToastContainer from './components/ToastContainer'
 import './index.css'
 import RequireAuth from './components/RequireAuth'
 import PixelDraw from './components/PixelDraw'
@@ -17,6 +18,7 @@ const store = createStore(reducer, applyMiddleware(thunk))
 ReactDOM.render(
   <Provider store={store}>
     <Helmet defaultTitle="Pixel Canvas App" titleTemplate="Pixel Canvas App | %s"/>
+    <ToastContainer />
     <HashRouter>
       <Routes>
         <Route path="/" element={<RequireAuth />}>
