@@ -7,7 +7,7 @@ import { HexColorPicker } from 'react-colorful'
 import { Popover, Transition } from '@headlessui/react'
 
 // ToolBox for adjusting zoom, panning, and selecting color
-const ToolBox = ({ canvasRef, name, socket }) => {
+const ToolBox = ({ canvasRef }) => {
   const ref = canvasRef
   const color = useSelector((store) => store.color)
   const mouseLoc = useRef({ x: 0, y: 0}) // track mouse location

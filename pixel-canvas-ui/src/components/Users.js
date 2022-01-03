@@ -77,13 +77,11 @@ const Users = ({ socket }) => {
             <Menu.Item>
               <GoogleLogout
                 clientId={OAUTH_CLIENT_ID}
-                buttonText="Logout"
                 onLogoutSuccess={() => dispatch(logout())}
                 render={renderProps => (
                   <button
-                    disabled={renderProps.disabled}
                     onClick={renderProps.onClick}
-                    className={classNames(' w-full hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700')}
+                    className={classNames(' w-full focus:bg-gray-100 hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700')}
                   >
                     Sign out
                   </button>

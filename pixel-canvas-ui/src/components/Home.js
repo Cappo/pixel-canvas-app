@@ -25,11 +25,11 @@ const Home = () => {
             <h1 className="text-5xl font-extrabold text-gray-900 grow">Gallery</h1>
             <NewCanvas addCanvas={addCanvas} />
           </div>
-          <div className="relative w-full">
-            <div className="pl-[50%] w-full flex gap-20 snap-x snap-mandatory overflow-auto pb-14 pr-[50%] pt-10">
+          <div id="gallery-list" className="relative w-full">
+            <div  className="pl-[50%] w-full flex gap-20 snap-x snap-mandatory overflow-auto pb-14 pr-[50%] pt-10">
             {canvasList.map((canvas) => (
               <div key={canvas._id}>
-              <CanvasPreview  canvas={canvas} />
+                <CanvasPreview  canvas={canvas} />
               </div>
             ))}
           </div>
