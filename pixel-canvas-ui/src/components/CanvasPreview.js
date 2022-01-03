@@ -49,7 +49,7 @@ const CanvasPreview = ({ canvas }) => {
 
 
   return (
-    <Link to={canvas._id} className="snap-center shrink-0">
+    <Link to={canvas._id}>
       <div className="shrink-0">
         <canvas ref={ref} width={canvas.width} height={canvas.height} className="hidden" />
         <img ref={item} src={(image) ? image : `https://dummyimage.com/${canvas.width}x${canvas.height}/fff/aaa`} alt="canvas preview" className={classNames("shadow-xl rounded-lg [image-rendering:pixelated] max-h-40 max-w-xs mx-auto h-40 hover:scale-110 transition ease-out", image ? false : 'animate-pulse')} />

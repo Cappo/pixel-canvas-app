@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -5,6 +7,10 @@ module.exports = {
   theme: {
     fontFamily: {
       'sans': 'HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif'
+    },
+    screens: {
+      'xs': '350px',
+      ...defaultTheme.screens,
     },
     extend: {
       backgroundImage: {

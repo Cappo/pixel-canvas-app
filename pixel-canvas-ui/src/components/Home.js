@@ -26,9 +26,9 @@ const Home = () => {
             <NewCanvas addCanvas={addCanvas} />
           </div>
           <div id="gallery-list" className="relative w-full">
-            <div  className="pl-[50%] w-full flex gap-20 snap-x snap-mandatory overflow-auto pb-14 pr-[50%] pt-10">
+            <div  className="xs:pl-[40%] md:pl-[50%] w-full flex gap-20 snap-x snap-mandatory overflow-auto pb-14 pr-[50%] pt-10">
             {canvasList.map((canvas) => (
-              <div key={canvas._id}>
+              <div key={canvas._id} className="snap-center shrink-0">
                 <CanvasPreview  canvas={canvas} />
               </div>
             ))}
