@@ -25,11 +25,17 @@ export const setPixelCache = async (canvasId, index, buffer) => {
 
 export const syncAllCanvases = async () => {
   const query = await canvas.find({}).lean()
-  const promises = []
-  for (const canvas of query) {
-    promises.push(syncPixelCacheWithDB(canvas._id))
+  const mutex = await client.get('init-mutex')
+  if (mutex === 'READY' || mutex === null) {
+    redis('grabbing mutex')
+    await client.set('init-mutex', process.env.HOST)
+    const promises = []
+    for (const canvas of query) {
+      promises.push(syncPixelCacheWithDB(canvas._id))
+    }
+    await Promise.all(promises)
+    await client.set('init-mutex', 'READY')
   }
-  await Promise.all(promises)
 }
 
 export const syncPixelCacheWithDB = async (canvasId) => {
