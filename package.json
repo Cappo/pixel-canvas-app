@@ -1,0 +1,22 @@
+{
+  "name": "pixel-canvas-app",
+  "version": "1.0.0",
+  "description": "Took inspiration from [r/place](https://www.redditinc.com/blog/how-we-built-rplace) to create a real time bit art application.",
+  "directories": {
+    "doc": "docs"
+  },
+  "workspaces": [
+    "api",
+    "ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cappo/pixel-canvas-app.git"
+  },
+  "author": "NicholasCappo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cappo/pixel-canvas-app/issues"
+  },
+  "homepage": "https://github.com/Cappo/pixel-canvas-app#readme"
+}

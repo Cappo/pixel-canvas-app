@@ -10,7 +10,7 @@ const options = {
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
 }
 
-const initDB = async ({ pixelSeed }) => {
+const initDB = async () => {
   try {
     await mongoose.connect(
       `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ADDR}:27017/`,

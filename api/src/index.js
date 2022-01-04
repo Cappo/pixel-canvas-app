@@ -8,7 +8,6 @@ import initRedis from './redis/init'
 import { start } from './utils/debug'
 import sockets from './sockets'
 import { createAdapter } from '@socket.io/redis-adapter'
-import { Cluster } from 'ioredis'
 
 // eslint-disable-next-line prettier/prettier
 (async () => {

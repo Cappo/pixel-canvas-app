@@ -1,9 +1,7 @@
 install:
-	npm --prefix pixel-canvas-api install
-	npm --prefix pixel-canvas-ui install
+	npm install
 build-packages:
-	npm --prefix pixel-canvas-api run build
-	npm --prefix pixel-canvas-ui run build
+	npm run build --workspaces
 build-docker:
 	docker-compose --profile all build
 build: build-packages build-docker

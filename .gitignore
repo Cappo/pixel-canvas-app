@@ -1,2 +1,4 @@
-db-cache
-redis-cache
+db-cache/
+redis-cache/
+.vscode/
+node_modules/

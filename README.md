@@ -8,7 +8,7 @@ Took inspiration from [r/place](https://www.redditinc.com/blog/how-we-built-rpla
 
 ```bash
 # install nvm and docker if you haven't already
-nvm install
+nvm install # or make sure you use the equivalent Node.js version found in .nvmrc
 make install
 make build
 make start

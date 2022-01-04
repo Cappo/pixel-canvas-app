@@ -59,11 +59,11 @@ services:
       - backend
       - all
     image: pixel_api:local
-    build: ./pixel-canvas-api
+    build: ./api
     restart: always
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 2
     depends_on:
       - db
       - redis
@@ -82,7 +82,7 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - api
     ports:
@@ -92,7 +92,7 @@ services:
       - frontend
       - all
     image: pixel_ui:local
-    build: ./pixel-canvas-ui
+    build: ./ui
     restart: always
     depends_on:
       - api
