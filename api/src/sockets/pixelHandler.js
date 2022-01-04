@@ -19,6 +19,7 @@ const pixelHandler = (io, socket) => {
       const { canvasId, index, color } = message
       if (!canvasId || !index || !color) {
         cb({ status: 'error', error: 'Malformed message' })
+        return
       }
       const buffer = Buffer.from(color.slice(1), 'hex')
       Promise.all([

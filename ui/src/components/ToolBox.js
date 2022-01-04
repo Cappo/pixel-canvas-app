@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useRef, Fragment } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { changeColor } from '../reducer'
+import { changeColor, changeTool } from '../reducer'
 import { MAX_ZOOM, MIN_ZOOM } from '../config'
-import { ZoomInIcon, ZoomOutIcon, PencilIcon } from '@heroicons/react/outline'
+import { ZoomInIcon, ZoomOutIcon, PencilIcon, ScissorsIcon, SupportIcon, HandIcon, DuplicateIcon } from '@heroicons/react/outline'
 import { HexColorPicker } from 'react-colorful'
 import { Popover, Transition } from '@headlessui/react'
+import { classNames } from '../utils'
 
 // ToolBox for adjusting zoom, panning, and selecting color
 const ToolBox = ({ canvasRef }) => {
   const ref = canvasRef
   const color = useSelector((store) => store.color)
+  const tool = useSelector(store => store.tool)
   const mouseLoc = useRef({ x: 0, y: 0}) // track mouse location
   const translations = useRef({ // track current translations
     originX: 0,
@@ -62,6 +64,11 @@ const ToolBox = ({ canvasRef }) => {
   const handleColorChange = (e) => {
     dispatch(changeColor(e))
   }
+
+  const dispatchChangeTool = tool => {
+    dispatch(changeTool(tool))
+  }
+  const handleToolChange = tool => () => dispatchChangeTool(tool)
 
   // Zoom on scroll
   const onScroll = useCallback(
@@ -119,7 +126,7 @@ const ToolBox = ({ canvasRef }) => {
   const mouseMove = useCallback(
     (e) => {
       // click and drag around canvas with middle mouse button
-      if (e.which === 2) {
+      if (e.which === 2 || (e.which === 1 && tool === 'dragger')) {
         const translateX = translations.current.translateX
         const translateY = translations.current.translateY
         translate({
@@ -129,7 +136,7 @@ const ToolBox = ({ canvasRef }) => {
       }
       mouseLoc.current = { x: e.pageX, y: e.pageY }
     },
-    [translate]
+    [tool, translate]
   )
 
   const keyboardMove = useCallback((e) => {
@@ -156,10 +163,22 @@ const ToolBox = ({ canvasRef }) => {
       case 'PageDown':
         decreaseZoom()
         break
+      case 'KeyC':
+        dispatchChangeTool('picker')
+        break
+      case 'KeyD':
+        dispatchChangeTool('paintbrush')
+        break
+      case 'KeyX':
+        dispatchChangeTool('eraser')
+        break
+      case 'Space':
+        dispatchChangeTool('dragger')
+        break
       default:
         break
     }
-  }, [decreaseZoom, increaseZoom, translate])
+  }, [decreaseZoom, dispatchChangeTool, increaseZoom, translate])
 
   useEffect(() => {
     if (ref && ref.current) {
@@ -181,9 +200,16 @@ const ToolBox = ({ canvasRef }) => {
   return (
       <div className="bg-purple-50 border-b-gray-300 border-b relative flex items-center justify-center">
         <div className="rounded-md text-sm font-medium flex justify-between py-2">
+          <button className="inline-block px-1 py-1 mx-1 rounded-md hover:bg-gray-500/30" type="button" onClick={increaseZoom}>
+            <ZoomInIcon className="h-6 w-6" />
+          </button>
+          <button className="inline-block px-1 py-1 mx-1 rounded-md hover:bg-gray-500/30" type="button" onClick={decreaseZoom}>
+            <ZoomOutIcon className="h-6 w-6" />
+          </button>
+          <div className="mx-1 border-r-gray-400 border" />
           <Popover className="relative">
-            <Popover.Button type="button" className="rounded-md px-1 py-1 ring-5 ring-slate-200 mx-1" style={{ backgroundColor: color }}>
-              <div className="h-6 w-6" />
+            <Popover.Button type="button" className="rounded-full p-1 ring-5 ring-slate-200 mx-2" style={{ backgroundColor: color }}>
+              <div className="h-8 w-8" />
             </Popover.Button>
             <Transition
               as={Fragment}
@@ -199,12 +225,23 @@ const ToolBox = ({ canvasRef }) => {
               </Popover.Panel>
             </Transition>
           </Popover>
+          <span className="bg-gray-500/30 rounded-lg p-1 mr-2">
+            <button className={classNames("transition inline-block p-1 rounded-md ring-5 ring-slate-200", tool === 'paintbrush' ? 'bg-purple-50' : 'hover:bg-purple-50/70 focus:bg-purple-50/70')} type="button" onClick={handleToolChange('paintbrush')}>
+              <PencilIcon className="h-6 w-6" />
+            </button>
+            <button className={classNames("transition inline-block p-1 ml-1 rounded-md ring-5 ring-slate-200", tool === 'picker' ? 'bg-purple-50' : 'hover:bg-purple-50/70 focus:bg-purple-50/70')} type="button" onClick={handleToolChange('picker')}>
+              <DuplicateIcon className="h-6 w-6" />
+            </button>
+            <button className={classNames("transition inline-block p-1 ml-1 rounded-md ring-5 ring-slate-200", tool === 'dragger' ? 'bg-purple-50' : 'hover:bg-purple-50/70 focus:bg-purple-50/70')} type="button" onClick={handleToolChange('dragger')}>
+              <HandIcon className="h-6 w-6" />
+            </button>
+            <button className={classNames("transition inline-block p-1 ml-1 rounded-md ring-5 ring-slate-200", tool === 'eraser' ? 'bg-purple-50' : 'hover:bg-purple-50/70 focus:bg-purple-50/70')} type="button" onClick={handleToolChange('eraser')}>
+              <ScissorsIcon className="h-6 w-6" />
+            </button>
+          </span>
           <div className="mx-1 border-r-gray-400 border" />
-          <button className="inline-block px-1 py-1 mx-1 rounded-md hover:bg-slate-200" type="button" onClick={increaseZoom}>
-            <ZoomInIcon className="h-6 w-6" />
-          </button>
-          <button className="inline-block px-1 py-1 mx-1 rounded-md hover:bg-slate-200" type="button" onClick={decreaseZoom}>
-            <ZoomOutIcon className="h-6 w-6" />
+          <button className="inline-block px-1 py-1 mx-1 rounded-md hover:bg-gray-500/30" type="button" onClick={() => alert('Help is on the way')}>
+            <SupportIcon className="h-6 w-6" />
           </button>
        </div>
       </div>

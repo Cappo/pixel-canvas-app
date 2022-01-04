@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { MIN_ZOOM } from '../config'
 import ToolBox from './ToolBox'
 import Navbar from './Navbar'
-import { notify } from '../reducer'
+import { changeColor, notify } from '../reducer'
 
 const Canvas2 = ({ socket, canvas }) => {
   const ref = useRef(null)
   const changeQueue = useRef([])
-  const [state, setState] = useState('painting')
+  const tool = useSelector(store => store.tool)
+  const [mouseDown, setMouseDown] = useState(false)
   const [queueStart, setQueueStart] = useState(false)
   const dispatch = useDispatch()
 
@@ -68,7 +69,7 @@ const Canvas2 = ({ socket, canvas }) => {
   // translate relative mouse position to X, Y co-ordinates
   // emit selected color to pixel X, Y
   // if successful, paint the pixel
-  const paintPixel =
+  const handleClick =
     ({ pageX, pageY }) => {
       const canvasRef = ref.current
       const ctx = canvasRef.getContext('2d')
@@ -76,40 +77,52 @@ const Canvas2 = ({ socket, canvas }) => {
       const rect = ref.current.getBoundingClientRect()
       const imageX = Math.floor((pageX - rect.left.toFixed(1)) / scale.toFixed(1))
       const imageY = Math.floor((pageY - rect.top.toFixed(1)) / scale.toFixed(1))
-      const index = imageX + (canvas.width * imageY)
-      socket.emit('change', { canvasId: canvas._id, index, color }, ({ status, error }) => {
-        if (status === 'ok') {
-          ctx.fillStyle = color
-          ctx.fillRect(imageX,imageY, 1, 1)
-          return
-        }
-        if (status === 'cooldown') {
-          dispatch(notify('Cooldown in effect, please wait before painting again.', 'Cooldown'))
-          return
-        }
-        dispatch(notify(`[${status}] There was a problem: ${error || 'No error message provided'}.`, 'Error'))
-      })
+      if (tool === 'eraser' || tool === 'paintbrush') {
+        const index = imageX + (canvas.width * imageY)
+        let newColor = color
+        if (tool === 'eraser') newColor = '#ffffff'
+        socket.emit('change', { canvasId: canvas._id, index, color: newColor }, ({ status, error }) => {
+          if (status === 'ok') {
+            ctx.fillStyle = newColor
+            ctx.fillRect(imageX,imageY, 1, 1)
+            return
+          }
+          if (status === 'cooldown') {
+            dispatch(notify('Cooldown in effect, please wait before painting again.', 'Cooldown'))
+            return
+          }
+          dispatch(notify(`[${status}] There was a problem: ${error || 'No error message provided'}.`, 'Error'))
+        })
+      }
+      if (tool === 'picker') {
+        function rgbToHex(r, g, b) {
+          return ((r << 16) | (g << 8) | b).toString(16);
+      }
+        var p = ctx.getImageData(imageX, imageY, 1, 1).data
+        var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)
+        dispatch(changeColor(hex))
+      }
     }
 
   // click to drag style setter
   const middleMousePressCheck = (e) => {
     const { button } = e
-    if (button === 1) {
-      setState('grabbing')
+    if (button === 1 || (button === 0 && tool === 'dragger')) {
+      setMouseDown(true)
     }
   }
 
   // no longer click to drag, reset style to painter
   const middleMouseReleaseCheck = ({ button }) => {
-    if (button === 1) {
-      setState('painting')
-    }
+    setMouseDown(false)
   }
 
-  const stateClass = (state) => ({
-    grabbing: 'cursor-grabbing',
-    painting: 'cursor-crosshair'
-  }[state])
+  const stateClass = (tool, mouseDown) => ({
+    eraser: 'cursor-crosshair',
+    dragger: mouseDown ? 'cursor-grabbing' : 'cursor-grab',
+    paintbrush: 'cursor-crosshair',
+    picker: 'cursor-crosshair',
+  }[tool])
 
   return (
     <>
@@ -123,10 +136,10 @@ const Canvas2 = ({ socket, canvas }) => {
         width={canvas.width}
         height={canvas.height}
         ref={ref}
-        onClick={paintPixel}
+        onClick={handleClick}
         onMouseDownCapture={middleMousePressCheck}
         onMouseUpCapture={middleMouseReleaseCheck}
-        className={stateClass(state) + ' hover:shadow hover:shadow-violet-200/50 [image-rendering:pixelated]'}>
+        className={stateClass(tool, mouseDown) + ' hover:shadow hover:shadow-violet-200/50 [image-rendering:pixelated]'}>
       </canvas>
     </div>
     </>
