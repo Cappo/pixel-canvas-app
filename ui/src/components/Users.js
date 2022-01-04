@@ -45,7 +45,7 @@ const Users = ({ socket }) => {
           <img
             key={i}
             className="inline-block h-6 w-6 rounded-full ring-2 ring-white"
-            src={imageUrl}
+            src={imageUrl || `https://avatars.dicebear.com/api/pixel-art/${id}.svg`}
             alt={name}
           />
         ))}
@@ -59,7 +59,7 @@ const Users = ({ socket }) => {
             <span className="sr-only">Open user menu</span>
             <img
               className="h-8 w-8 rounded-full"
-              src={imageUrl}
+              src={imageUrl || `https://avatars.dicebear.com/api/pixel-art/${socket.id}.svg`}
               alt=""
             />
           </Menu.Button>
