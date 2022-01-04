@@ -31,7 +31,8 @@ const PixelDraw = () => {
         },
         query: {
           canvasId: canvas._id,
-        }
+        },
+        transports: ['websocket']
       })
       newSocket.on('connection_error', err => {
         dispatch(notify(err, 'Error'))
@@ -43,7 +44,7 @@ const PixelDraw = () => {
         newSocket.close()
       }
     }
-  }, [canvas, idToken, name])
+  }, [canvas, dispatch, idToken, name])
 
   return socket &&
     <div className="overflow-hidden h-full">

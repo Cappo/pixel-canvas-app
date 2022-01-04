@@ -1,4 +1,4 @@
-version: '2'
+version: '3.9'
 services:
   redis:
     profiles:
@@ -61,6 +61,9 @@ services:
     image: pixel_api:local
     build: ./pixel-canvas-api
     restart: always
+    deploy:
+      mode: replicated
+      replicas: 3
     depends_on:
       - db
       - redis
@@ -68,7 +71,7 @@ services:
       - db
       - redis
     ports:
-      - 4000:4000
+      - "4000"
     environment:
       DB_USER: root
       DB_PASSWORD: example
@@ -76,6 +79,14 @@ services:
       REDIS_ADDR: redis
       COOLDOWN: 1000
       OAUTH_CLIENT_ID: 918036586620-l07dtig8lks682dhk71l4vemhqbafjun.apps.googleusercontent.com
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+    ports:
+      - "4000:4000"
   ui:
     profiles:
       - frontend

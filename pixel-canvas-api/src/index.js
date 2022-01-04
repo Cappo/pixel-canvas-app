@@ -7,6 +7,8 @@ import initDB from './db'
 import initRedis from './redis/init'
 import { start } from './utils/debug'
 import sockets from './sockets'
+import { createAdapter } from '@socket.io/redis-adapter'
+import { Cluster } from 'ioredis'
 
 // eslint-disable-next-line prettier/prettier
 (async () => {
@@ -31,7 +33,7 @@ import sockets from './sockets'
     process.env.COOLDOWN = 100
   }
 
-  await initRedis()
+  const redisClient = await initRedis()
   await initDB({ pixelSeed: process.env.PIXEL_SEED })
 
   const port = process.env.PORT || 4000
@@ -39,6 +41,14 @@ import sockets from './sockets'
   const httpServer = createServer(app)
 
   const io = new Server(httpServer, { cors: { origin: '*' } })
+  const pubClient = redisClient
+  // pubClient.on('error', (err) => error('Redis Client Error', err))
+  const subClient = pubClient.duplicate()
+  io.on('error', (args) => {
+    error(...args)
+  })
+
+  io.adapter(createAdapter(pubClient, subClient))
   sockets(io)
 
   httpServer.listen(port, () => {

@@ -1,4 +1,4 @@
-import { sockets } from '../utils/debug'
+import { error, sockets } from '../utils/debug'
 import authMiddleware from './authMiddleware'
 import registerUserHandler from './userHandler'
 import registerPixelHandler from './pixelHandler'
@@ -16,6 +16,10 @@ const init = (io) => {
     socket.on('disconnect', () => {
       sockets('disconnect')
     })
+  })
+
+  io.sockets.on('error', (args) => {
+    error(...args)
   })
 }
 
