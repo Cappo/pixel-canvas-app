@@ -4,14 +4,10 @@ export const classNames = (...classes) => {
 
 const seed = '0123456789abcdef'
 export const getRandomColor = () => {
-  const choices = []
+  let hex = '#'
   for (let i = 0; i < 6; i++) {
     const index = Math.floor(Math.random() * seed.length)
-    choices.push(seed.slice(index, index + 1))
-  }
-  let hex = '#'
-  for (const h of choices) {
-    hex += h
+    hex += seed.slice(index, index + 1)
   }
   return hex
 }
