@@ -8,6 +8,7 @@ import initRedis from './redis/init'
 import { start } from './utils/debug'
 import sockets from './sockets'
 import { createAdapter } from '@socket.io/redis-adapter'
+import { syncAllCanvases } from './redis/pixels'
 
 // eslint-disable-next-line prettier/prettier
 (async () => {
@@ -25,31 +26,27 @@ import { createAdapter } from '@socket.io/redis-adapter'
     }
   }
 
-  if (!process.env.PIXEL_SEED) {
-    process.env.PIXEL_SEED = 1000000
-  }
   if (!process.env.COOLDOWN) {
     process.env.COOLDOWN = 100
   }
 
   const redisClient = await initRedis()
-  await initDB({ pixelSeed: process.env.PIXEL_SEED })
-
-  const port = process.env.PORT || 4000
+  await initDB()
+  await syncAllCanvases()
 
   const httpServer = createServer(app)
 
   const io = new Server(httpServer, { cors: { origin: '*' } })
-  const pubClient = redisClient
-  // pubClient.on('error', (err) => error('Redis Client Error', err))
-  const subClient = pubClient.duplicate()
   io.on('error', (args) => {
     error(...args)
   })
 
+  const pubClient = redisClient
+  const subClient = pubClient.duplicate()
   io.adapter(createAdapter(pubClient, subClient))
   sockets(io)
 
+  const port = process.env.PORT || 4000
   httpServer.listen(port, () => {
     start('rest API is listening to port %d', port)
   })

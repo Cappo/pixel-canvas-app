@@ -23,6 +23,15 @@ export const setPixelCache = async (canvasId, index, buffer) => {
   }
 }
 
+export const syncAllCanvases = async () => {
+  const query = await canvas.find({}).lean()
+  const promises = []
+  for (const canvas of query) {
+    promises.push(syncPixelCacheWithDB(canvas._id))
+  }
+  await Promise.all(promises)
+}
+
 export const syncPixelCacheWithDB = async (canvasId) => {
   const { height, width } = await canvas.findById(canvasId)
   const size = height * width * 4
