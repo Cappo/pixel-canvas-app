@@ -12,7 +12,7 @@ start-backend:
 start-data:
 	docker-compose --profile data up
 down:
-	docker-compose down
+	docker-compose --profile all down
 clean:
 	rm -rf db-cache redis-cache
 create-canvas:
