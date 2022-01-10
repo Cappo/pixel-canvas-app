@@ -11,7 +11,7 @@ const defaultState = {
   pixels: [],
   color: getRandomColor(),
   socket: null,
-  tool: '',
+  tool: 'paintbrush',
   auth: null,
   notifications: [{ appearance: 'Success', message: 'There was an error' }],
 }

@@ -118,7 +118,7 @@ services:
       - frontend
 volumes:
     db-cache:
-        driver: local
+      driver: local
     redis-cache:
       driver: local
 networks:
